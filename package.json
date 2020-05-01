@@ -1,0 +1,23 @@
+{
+  "name": "moviedazz_version2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "npm start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheInfinity007/MovieDazZ_version2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TheInfinity007/MovieDazZ_version2/issues"
+  },
+  "homepage": "https://github.com/TheInfinity007/MovieDazZ_version2#readme",
+  "dependencies": {
+    "ejs": "^3.0.2",
+    "express": "^4.17.1"
+  }
+}

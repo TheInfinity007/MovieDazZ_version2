@@ -196,10 +196,11 @@ section.landing:before
 	border:none;
 	overflow: hidden;
 	background: rgb(210, 210, 210);
+	width:150px;
 }
 .card img
 {
-	max-height: 300px;
+	max-height: 225px;
 	border-radius:15px;
 }
 .card img:hover

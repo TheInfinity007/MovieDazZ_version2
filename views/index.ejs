@@ -78,45 +78,33 @@
 				<div class="mt-3">
 					<div class="row">
 						<div class="owl-carousel owl-theme">
-							<div class="item">
+							<!-- <div class="item">
 								<div class="card">
-									<img src="/res/img/you.jpg" class="">
+									<img src="/res/img/cars3.jpg" class="">
 									<div class="title">
 										The wall
 									</div>
 								</div>
-							</div>
-							<div class="item">
-								<div class="card">
-									<img src="/res/img/you.jpg" class="card-img-top">
+							</div> -->
+							<% trendingMovies.forEach((movie)=>{ %>
+								<div class="item">
+									<div class="card">
+										<img src="https://image.tmdb.org/t/p/original<%= movie[4]%>" class="card-img-top">
+										<div class="title">
+											<%= movie[2] %>
+										</div>
+									</div>
 								</div>
-							</div>
-							<div class="item">
-								<div class="card">
-									<img src="/res/img/you.jpg" class="card-img-top">
-								</div>
-							</div>
-							<div class="item">
-								<div class="card">
-									<img src="/res/img/you.jpg" class="card-img-top">
-								</div>
-							</div>
-							<div class="item">
-								<div class="card">
-									<img src="/res/img/you.jpg" class="card-img-top">
-								</div>
-							</div>
-							<div class="item">
-								<div class="card">
-									<img src="/res/img/you.jpg" class="card-img-top">
-								</div>
-							</div>
+							<% }); %>
+							
+							
 						</div>
 					</div>
 				</div>
 			</section>
 		</div>
 	</main>	
+	<%= trendingMovies %>
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -132,18 +120,18 @@
 	<script type="text/javascript">
 		$(".owl-carousel").owlCarousel({
 			loop:false,
-			margin:15,
+			margin:5,
 			nav:true,
 			stagePadding:50,
 			responsive:{
 				0:{
-					items: 3
+					items: 2
 				},
 				600: {
-					items:6
+					items:4
 				},
 				1000: {
-					items:6
+					items:7
 				}
 			}
 		});

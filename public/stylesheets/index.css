@@ -174,11 +174,11 @@ section.landing:before
 	background: rgb(210, 210, 210);
 	overflow: hidden;
 	box-shadow: 5px 8px 8px rgba(0,0,0,0.5);
-	padding:20px 0 80px;
+	padding:20px 50px 80px;
 }
 .m-trending .header
 {
-	padding:20px 50px 0;
+	padding:20px 0;
 }
 .m-trending .header h3
 {
@@ -186,29 +186,39 @@ section.landing:before
 	padding-bottom:5px;
 	border-bottom: 1px solid rgba(0,0,0,0.5);
 }
-.owl-stage
+.cards-wrapper
 {
-	/*padding-left:0 !important;*/
+	overflow-x: scroll;
 }
-.card
+.movie-cards
 {
-	position: relative;
-	border:none;
-	overflow: hidden;
-	background: rgb(210, 210, 210);
+	display: inline-flex;
+}
+.movie-card
+{
+	margin: 5px 10px;
+	overflow:hidden;
 	width:150px;
+	padding:0;
 }
-.card img
+.movie-card img
 {
-	max-height: 225px;
-	border-radius:15px;
+	width:150px;
+	border-radius: 15px;
 }
-.card img:hover
+.card-content
 {
-	opacity:.8;
-	transition: .5s;
+	width:100%;
+	overflow: hidden;
 }
-.card .title	
+.movie-card h5
 {
+	margin:0;
 }
+.card-release
+{
+	font-size:12px;
+}
+
+
 

@@ -28,7 +28,6 @@ app.get("/", (req, res)=>{
 		temp.push(result["poster_path"]);
 		myTrendingMovies.push(temp);
 	});
-	console.log(myTrendingMovies);
 	res.render("index", {trendingMovies: myTrendingMovies});
 });
 

@@ -5,6 +5,8 @@ body
 	box-sizing:border-box;
 	background:linear-gradient(#1D4350,#A43931,#BE5869);
 	background-repeat: no-repeat;
+	background-color: purple;
+	background-blend-mode: soft-light;
 	position:relative;
 	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
@@ -174,7 +176,7 @@ section.landing:before
 	background: rgb(210, 210, 210);
 	overflow: hidden;
 	box-shadow: 5px 8px 8px rgba(0,0,0,0.5);
-	padding:20px 50px 80px;
+	padding:20px 50px 20px;
 }
 .m-trending .header
 {

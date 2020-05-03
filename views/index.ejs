@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  	<link rel="stylesheet" href="/res/library/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="stylesheets/index.css">
 </head>
 <body>
@@ -68,7 +68,7 @@
 			</div>
 		</section>	
 		<div class="container-fluid">
-			<section class="m-trending">
+			<section class="m-trending mt-3">
 				<div class="header">
 					<h3>Trending</h3>
 					<div class="hr"></div>
@@ -86,17 +86,54 @@
 							</div>
 						<% }); %>
 					</div>
+				</div>			
+			</section>
+			<section class="m-trending mt-3">
+				<div class="header">
+					<h3>In Theatres</h3>
+					<div class="hr"></div>
 				</div>
-							
-							
+
+				<div class="cards-wrapper">
+					<div class="movie-cards">	
+						<% theatreMovies.forEach((movie)=>{ %>
+							<div class="movie-card">
+								<img src="https://image.tmdb.org/t/p/original<%= movie[4]%>" class="">
+								<div class="card-content">
+									<h5 title="<%=movie[2]%>"><% if(movie[2].length > 20){%><%= movie[2].slice(0, 17)%>...<%}else{%><%= movie[2]%><%}%></h5>
+									<div class="card-release"><%=movie[3]%></div>
+								</div>
+							</div>
+						<% }); %>
+					</div>
+				</div>			
+			</section>
+			<section class="m-trending mt-3">
+				<div class="header">
+					<h3>Upcoming</h3>
+					<div class="hr"></div>
+				</div>
+
+				<div class="cards-wrapper">
+					<div class="movie-cards">	
+						<% upcomingMovies.forEach((movie)=>{ %>
+							<div class="movie-card">
+								<img src="https://image.tmdb.org/t/p/original<%= movie[4]%>" class="">
+								<div class="card-content">
+									<h5 title="<%=movie[2]%>"><% if(movie[2].length > 20){%><%= movie[2].slice(0, 17)%>...<%}else{%><%= movie[2]%><%}%></h5>
+									<div class="card-release"><%=movie[3]%></div>
+								</div>
+							</div>
+						<% }); %>
+					</div>
+				</div>			
 			</section>
 		</div>
-	</main>	
-	<%= trendingMovies %>
+	</main>
 	
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+	<script src="/res/library/jquery-3.5.0.min.js"></script>
+	<script src="/res/library/popper.min.js"></script>
+	<script src="/res/library/bootstrap.min.js"></script>
 	<script type="text/javascript">
 		let skewed = document.querySelector(".skewed");
 		window.addEventListener('scroll', function(){

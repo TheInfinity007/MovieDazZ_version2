@@ -77,13 +77,22 @@
 				<div class="cards-wrapper">
 					<div class="movie-cards">	
 						<% trendingMovies.forEach((movie)=>{ %>
-							<div class="movie-card">
-								<img src="https://image.tmdb.org/t/p/original<%= movie[4]%>" class="">
-								<div class="card-content">
-									<h5 title="<%=movie[2]%>"><% if(movie[2].length > 20){%><%= movie[2].slice(0, 17)%>...<%}else{%><%= movie[2]%><%}%></h5>
-									<div class="card-release"><%=movie[3]%></div>
+							<a href="/movie/<%= movie[0]%>-<%=movie[2].split(' ').join('-')%>">
+								<div class="movie-card">
+									<div class="img">
+										<img src="https://image.tmdb.org/t/p/original<%= movie[4]%>" class="">	
+										<div class="">
+											<span class="favourite">
+												<i class="fa fa-heart"></i>
+											</span>
+										</div>
+									</div>								
+									<div class="card-content">
+										<h5 title="<%=movie[2]%>"><% if(movie[2].length > 20){%><%= movie[2].slice(0, 17)%>...<%}else{%><%= movie[2]%><%}%></h5>
+										<div class="card-release"><%=movie[3]%></div>
+									</div>
 								</div>
-							</div>
+							</a>
 						<% }); %>
 					</div>
 				</div>			
@@ -97,13 +106,22 @@
 				<div class="cards-wrapper">
 					<div class="movie-cards">	
 						<% theatreMovies.forEach((movie)=>{ %>
-							<div class="movie-card">
-								<img src="https://image.tmdb.org/t/p/original<%= movie[4]%>" class="">
-								<div class="card-content">
-									<h5 title="<%=movie[2]%>"><% if(movie[2].length > 20){%><%= movie[2].slice(0, 17)%>...<%}else{%><%= movie[2]%><%}%></h5>
-									<div class="card-release"><%=movie[3]%></div>
+							<a href="">
+								<div class="movie-card">
+									<div class="img">
+										<img src="https://image.tmdb.org/t/p/original<%= movie[4]%>" class="">
+										<div class="">
+											<span class="favourite">
+												<i class="fa fa-heart"></i>
+											</span>
+										</div>	
+									</div>
+									<div class="card-content">
+										<h5 title="<%=movie[2]%>"><% if(movie[2].length > 20){%><%= movie[2].slice(0, 17)%>...<%}else{%><%= movie[2]%><%}%></h5>
+										<div class="card-release"><%=movie[3]%></div>
+									</div>
 								</div>
-							</div>
+							</a>
 						<% }); %>
 					</div>
 				</div>			
@@ -117,13 +135,22 @@
 				<div class="cards-wrapper">
 					<div class="movie-cards">	
 						<% upcomingMovies.forEach((movie)=>{ %>
-							<div class="movie-card">
-								<img src="https://image.tmdb.org/t/p/original<%= movie[4]%>" class="">
-								<div class="card-content">
-									<h5 title="<%=movie[2]%>"><% if(movie[2].length > 20){%><%= movie[2].slice(0, 17)%>...<%}else{%><%= movie[2]%><%}%></h5>
-									<div class="card-release"><%=movie[3]%></div>
+							<a href="">
+								<div class="movie-card">
+									<div class="img">
+										<img src="https://image.tmdb.org/t/p/original<%= movie[4]%>">
+										<div class="">
+											<span class="favourite">
+												<i class="fa fa-heart"></i>
+											</span>
+										</div>
+									</div>
+									<div class="card-content">
+										<h5 title="<%=movie[2]%>"><% if(movie[2].length > 20){%><%= movie[2].slice(0, 17)%>...<%}else{%><%= movie[2]%><%}%></h5>
+										<div class="card-release"><%=movie[3]%></div>
+									</div>
 								</div>
-							</div>
+							</a>
 						<% }); %>
 					</div>
 				</div>			

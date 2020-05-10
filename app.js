@@ -5,95 +5,107 @@ const app = express();
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
-app.get("/", (req, res)=>{
-	let myTrendingMovies = [];
-	let theatreMovies = [];
-	let upcomingMovies = [];
-	let url = "https://api.themoviedb.org/3/trending/movie/week?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9";
-	request(url, (error, response, body)=>{
-		let data = JSON.parse(body);
-		console.log(data["results"].length);
-		data["results"].forEach((result)=>{
-			if(result["poster_path"] === null) return;
-			let temp = [];
-			temp.push(result["id"]);
-			temp.push(result["vote_average"]);
-			temp.push(result["title"]);
-			temp.push(result["release_date"]);
-			temp.push(result["poster_path"]);
-			myTrendingMovies.push(temp);
-		});
-		url = "https://api.themoviedb.org/3/movie/now_playing?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9";
-		request(url, (error, response, body)=>{
-			data = JSON.parse(body);
-			console.log(data["results"].length);
-			data["results"].forEach((result)=>{
-				if(result["poster_path"] === null) return;
-				let temp = [];
-				temp.push(result["id"]);
-				temp.push(result["vote_average"]);
-				temp.push(result["title"]);
-				temp.push(result["release_date"]);
-				temp.push(result["poster_path"]);
-				theatreMovies.push(temp);
-			});
-			url = "https://api.themoviedb.org/3/movie/now_playing?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9";
-			request(url, (error, response, body)=>{
-				data = JSON.parse(body);
-				console.log(data["results"].length);
-				data["results"].forEach((result)=>{
-					if(result["poster_path"] === null) return;
-					let temp = [];
-					temp.push(result["id"]);
-					temp.push(result["vote_average"]);
-					temp.push(result["title"]);
-					temp.push(result["release_date"]);
-					temp.push(result["poster_path"]);
-					upcomingMovies.push(temp);
-				});
-				res.render("index", {trendingMovies: myTrendingMovies, theatreMovies: theatreMovies, upcomingMovies: upcomingMovies});
-			});
-		});
-	});
-});	
 // app.get("/", (req, res)=>{
 // 	let myTrendingMovies = [];
 // 	let theatreMovies = [];
 // 	let upcomingMovies = [];
-// 	let data = trendingMovies;
-// 	console.log(data["results"].length);
-// 	data["results"].forEach((result)=>{
-// 		let temp = [];
-// 		temp.push(result["id"]);
-// 		temp.push(result["vote_average"]);
-// 		temp.push(result["title"]);
-// 		temp.push(result["release_date"]);
-// 		temp.push(result["poster_path"]);
-// 		myTrendingMovies.push(temp);
+// 	let url = "https://api.themoviedb.org/3/trending/movie/week?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9";
+// 	request(url, (error, response, body)=>{
+// 		let data = JSON.parse(body);
+// 		console.log(data["results"].length);
+// 		data["results"].forEach((result)=>{
+// 			if(result["poster_path"] === null) return;
+// 			let temp = [];
+// 			temp.push(result["id"]);
+// 			temp.push(result["vote_average"]);
+// 			temp.push(result["title"]);
+// 			temp.push(result["release_date"]);
+// 			temp.push(result["poster_path"]);
+// 			myTrendingMovies.push(temp);
+// 		});
+// 		url = "https://api.themoviedb.org/3/movie/now_playing?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9";
+// 		request(url, (error, response, body)=>{
+// 			data = JSON.parse(body);
+// 			console.log(data["results"].length);
+// 			data["results"].forEach((result)=>{
+// 				if(result["poster_path"] === null) return;
+// 				let temp = [];
+// 				temp.push(result["id"]);
+// 				temp.push(result["vote_average"]);
+// 				temp.push(result["title"]);
+// 				temp.push(result["release_date"]);
+// 				temp.push(result["poster_path"]);
+// 				theatreMovies.push(temp);
+// 			});
+// 			url = "https://api.themoviedb.org/3/movie/now_playing?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9";
+// 			request(url, (error, response, body)=>{
+// 				data = JSON.parse(body);
+// 				console.log(data["results"].length);
+// 				data["results"].forEach((result)=>{
+// 					if(result["poster_path"] === null) return;
+// 					let temp = [];
+// 					temp.push(result["id"]);
+// 					temp.push(result["vote_average"]);
+// 					temp.push(result["title"]);
+// 					temp.push(result["release_date"]);
+// 					temp.push(result["poster_path"]);
+// 					upcomingMovies.push(temp);
+// 				});
+// 				res.render("index", {trendingMovies: myTrendingMovies, theatreMovies: theatreMovies, upcomingMovies: upcomingMovies});
+// 			});
+// 		});
 // 	});
-// 	data = nowPlaying;
-// 	data["results"].forEach((result)=>{
-// 		let temp = [];
-// 		temp.push(result["id"]);
-// 		temp.push(result["vote_average"]);
-// 		temp.push(result["title"]);
-// 		temp.push(result["release_date"]);
-// 		temp.push(result["poster_path"]);
-// 		theatreMovies.push(temp);
-// 	});
-// 	data = upcoming;
-// 	data["results"].forEach((result)=>{
-// 		if(result["poster_path"] === null) return;
-// 		let temp = [];
-// 		temp.push(result["id"]);
-// 		temp.push(result["vote_average"]);
-// 		temp.push(result["title"]);
-// 		temp.push(result["release_date"]);
-// 		temp.push(result["poster_path"]);
-// 		upcomingMovies.push(temp);
-// 	});
-// 	res.render("index", {trendingMovies: myTrendingMovies, theatreMovies: theatreMovies, upcomingMovies: upcomingMovies});
-// });
+// });	
+
+app.get("/", (req, res)=>{
+	let myTrendingMovies = [];
+	let theatreMovies = [];
+	let upcomingMovies = [];
+	let data = trendingMovies;
+	console.log(data["results"].length);
+	data["results"].forEach((result)=>{
+		let temp = [];
+		temp.push(result["id"]);
+		temp.push(result["vote_average"]);
+		temp.push(result["title"]);
+		temp.push(result["release_date"]);
+		temp.push(result["poster_path"]);
+		myTrendingMovies.push(temp);
+	});
+	data = nowPlaying;
+	data["results"].forEach((result)=>{
+		let temp = [];
+		temp.push(result["id"]);
+		temp.push(result["vote_average"]);
+		temp.push(result["title"]);
+		temp.push(result["release_date"]);
+		temp.push(result["poster_path"]);
+		theatreMovies.push(temp);
+	});
+	data = upcoming;
+	data["results"].forEach((result)=>{
+		if(result["poster_path"] === null) return;
+		let temp = [];
+		temp.push(result["id"]);
+		temp.push(result["vote_average"]);
+		temp.push(result["title"]);
+		temp.push(result["release_date"]);
+		temp.push(result["poster_path"]);
+		upcomingMovies.push(temp);
+	});
+	res.render("index", {trendingMovies: myTrendingMovies, theatreMovies: theatreMovies, upcomingMovies: upcomingMovies});
+});
+
+app.get('/movie/:movie_id', (req, res)=>{
+	let movieId = req.params.movie_id.substr(0, req.params.movie_id.indexOf('-'));
+	url = `https://api.themoviedb.org/3/movie/${movieId}?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
+	console.log(url);
+	request(url, (error, response, body)=>{
+		let data = JSON.parse(body);
+		res.send(data);
+	});
+	// res.send("Sunita says Result Found!");
+});
 
 app.listen(process.env.PORT || 3000, ()=>{
 	console.log('MovieDazZ Has Started');

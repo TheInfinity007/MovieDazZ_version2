@@ -196,6 +196,12 @@ section.landing:before
 {
 	display: inline-flex;
 }
+.cards-wrapper .movie-cards a
+{
+	text-decoration: none;
+	color:inherit;
+}
+
 .movie-card
 {
 	margin: 5px 10px;
@@ -203,10 +209,32 @@ section.landing:before
 	width:150px;
 	padding:0;
 }
-.movie-card img
+.movie-card .img
 {
 	width:150px;
 	border-radius: 15px;
+	overflow: hidden;
+	max-height: 225px;
+	position: relative;
+}
+.movie-card .img img
+{
+	width:150px;
+}
+.movie-card .img .favourite
+{
+	position: absolute;
+	top:2%;
+	right:5%;
+}
+.movie-card .img .favourite .fa-heart
+{
+	color:white;
+	z-index: 5;
+}
+.movie-card .img .favourite .fa-heart:hover
+{
+	color:red;
 }
 .card-content
 {

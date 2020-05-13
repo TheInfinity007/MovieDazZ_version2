@@ -5,6 +5,34 @@ const app = express();
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
+var externalIdsData = {};
+var start;
+
+getImdbId = function(res, mId){
+	let url = `https://api.themoviedb.org/3/movie/${mId}/external_ids?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
+	console.log(url);
+	request(url, (error, response, body)=>{
+		if(!error && response.statusCode == 200){
+			let data = JSON.parse(body);
+			let imdbId = data['imdb_id'];
+			console.log(imdbId);
+			externalIdsData[mId] = imdbId;
+			grabMovieData(res, imdbId);
+		}else{
+			res.send("ERROR OCCURED");
+		}
+	});
+}
+grabMovieData = function(res, imdbId){
+	url = `http://www.omdbapi.com/?i=${imdbId}&plot=full&apikey=thewdb`;
+	request(url, (error, response, body)=>{
+		let data = JSON.parse(body);
+		console.log("Sending form grabMovieData");
+		console.log(new Date().getTime()-start);
+		res.send(data);
+	})
+}
+
 // app.get("/", (req, res)=>{
 // 	let myTrendingMovies = [];
 // 	let theatreMovies = [];
@@ -97,14 +125,15 @@ app.get("/", (req, res)=>{
 });
 
 app.get('/movie/:movie_id', (req, res)=>{
+	start = new Date().getTime();
 	let movieId = req.params.movie_id.substr(0, req.params.movie_id.indexOf('-'));
-	url = `https://api.themoviedb.org/3/movie/${movieId}?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
-	console.log(url);
-	request(url, (error, response, body)=>{
-		let data = JSON.parse(body);
-		res.send(data);
-	});
-	// res.send("Sunita says Result Found!");
+	let imdbId = externalIdsData[movieId];
+	if(imdbId === undefined){
+		console.log(imdbId);
+		getImdbId(res, movieId);
+	}else{
+	 	 grabMovieData(res, imdbId)
+	}
 });
 
 app.listen(process.env.PORT || 3000, ()=>{

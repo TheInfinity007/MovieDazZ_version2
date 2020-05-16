@@ -1,9 +1,18 @@
 const express = require('express');
 const request = require('request');
 const app = express();
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+var ExternalIds = require("./models/externalId");
+
+var url = "mongodb://localhost/moviedazz";
+mongoose.set('useUnifiedTopology', true);
+mongoose.set('useCreateIndex', true);
+mongoose.connect(url, {useNewUrlParser: true, useFindAndModify:false});
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
+app.use(bodyParser.urlencoded({extended:true}));
 
 var externalIdsData = {};
 var start;
@@ -16,6 +25,9 @@ getImdbId = function(res, mId){
 			let data = JSON.parse(body);
 			let imdbId = data['imdb_id'];
 			console.log(imdbId);
+			ExternalIds.create({tmdbId: mId, imdbId: imdbId}, (err, obj)=>{
+				console.log("New = " + obj);
+			})
 			externalIdsData[mId] = imdbId;
 			grabMovieData(res, imdbId);
 		}else{
@@ -27,9 +39,8 @@ grabMovieData = function(res, imdbId){
 	url = `http://www.omdbapi.com/?i=${imdbId}&plot=full&apikey=thewdb`;
 	request(url, (error, response, body)=>{
 		let data = JSON.parse(body);
-		console.log("Sending form grabMovieData");
 		console.log(new Date().getTime()-start);
-		res.send(data);
+		res.render("show", {data: data});
 	})
 }
 
@@ -124,12 +135,18 @@ app.get("/", (req, res)=>{
 	res.render("index", {trendingMovies: myTrendingMovies, theatreMovies: theatreMovies, upcomingMovies: upcomingMovies});
 });
 
-app.get('/movie/:movie_id', (req, res)=>{
+app.get('/movie/:movie_id', async (req, res)=>{
 	start = new Date().getTime();
 	let movieId = req.params.movie_id.substr(0, req.params.movie_id.indexOf('-'));
-	let imdbId = externalIdsData[movieId];
+	let imdbId;
+	try{
+		foundContent = await ExternalIds.findOne({tmdbId: movieId}, {imdbId:1});
+		imdbId = foundContent.imdbId;
+		console.log("Found = ", foundContent);
+	}catch(err){	}
+	
+	console.log(imdbId);
 	if(imdbId === undefined){
-		console.log(imdbId);
 		getImdbId(res, movieId);
 	}else{
 	 	 grabMovieData(res, imdbId)
@@ -140,10 +157,6 @@ app.listen(process.env.PORT || 3000, ()=>{
 	console.log('MovieDazZ Has Started');
 	console.log('Server is listening at localhost:3000');
 });
-
-
-
-
 
 
 

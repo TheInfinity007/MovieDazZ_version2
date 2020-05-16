@@ -17,8 +17,10 @@
   },
   "homepage": "https://github.com/TheInfinity007/MovieDazZ_version2#readme",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "ejs": "^3.0.2",
     "express": "^4.17.1",
+    "mongoose": "^5.9.14",
     "request": "^2.88.2"
   }
 }

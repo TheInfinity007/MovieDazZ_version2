@@ -1,0 +1,145 @@
+#show
+{
+	background: #333;
+	color: #fff;
+	height:100vh;
+	padding-top:57.2px;
+}
+.title h1
+{
+	font-size:3rem;
+}
+.year h2
+{
+	font-size:2.3rem;
+	color:#c0c0c0;
+}
+.details
+{
+	color: #c0c0c0;
+}
+.plot
+{
+	text-align: left;
+	font-size: 1.5rem;
+}
+.plot p
+{
+	line-height:1.3;
+}
+.table
+{
+	color:#fff;
+}
+.table img
+{
+	width:70px;
+}
+.ratings .caption
+{
+	font-size:1.25rem;
+}
+.ratings .table tr td
+{
+	font-size:1.25rem;
+	vertical-align: middle;
+}
+.stars .table tr td
+{
+	font-size: 1.5rem;
+	padding-top:0;
+}
+h4.title
+{
+	display: inline;
+}
+.year h5
+{
+	display: inline;	
+}
+.card
+{
+	margin-bottom:1rem;
+}
+.card-body
+{
+	padding:14px;
+	padding-bottom:6px;
+}
+@media(min-width: 768px){
+	.card
+	{
+		min-height: 300px;
+	}
+	.card-img-top
+	{
+		max-height:300px;
+	}
+	.card.form
+	{
+		min-height:0;
+	}
+	.card.form .card-body
+	{
+		padding-bottom:12px;
+	}
+}
+.form
+{
+	color:#333;
+}
+form label
+{
+	font-weight: bold;
+	font-size:1.25rem;
+}
+.heading
+{
+	background :#555555;
+	text-align: center;
+	padding:1.5rem;
+	margin-bottom:2rem;
+	border-radius: 10px;
+	width:100%;
+}
+.heading h1
+{
+	display: inline;
+}
+
+.well
+{
+	width:100%;
+	text-align: center;
+	background:#555;
+	padding:0.5rem;
+	margin-bottom: 1rem;
+	border-radius: 20px;	
+}
+.pagination
+{
+	margin:20px 0;
+	justify-content: center;
+}
+a.page-link
+{
+	background: #555;
+	color:#fff;
+}
+li.disabled a.page-link
+{
+	background:#666 !important;
+	color:rgba(255,255,255,0.8) !important;
+}
+footer
+{
+	padding:10px 0;
+	position: absolute;
+	text-align:center;
+	width:100%;
+	height: 40px;
+	bottom:0;
+	background: #6cf;
+	background:rgb(51,51,51);
+	margin-top:40px;
+}

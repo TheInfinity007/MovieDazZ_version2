@@ -1,7 +1,10 @@
-body
+*
 {
 	margin:0;
 	padding:0;
+}
+body
+{
 	box-sizing:border-box;
 	background:linear-gradient(#1D4350,#A43931,#BE5869);
 	background-repeat: no-repeat;
@@ -9,6 +12,7 @@ body
 	background-blend-mode: soft-light;
 	position:relative;
 	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	height: 100%;
 }
 .navbar
 {

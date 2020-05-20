@@ -37,11 +37,17 @@ getImdbId = function(res, mId){
 }
 grabMovieData = function(res, imdbId){
 	url = `http://www.omdbapi.com/?i=${imdbId}&plot=full&apikey=thewdb`;
-	request(url, (error, response, body)=>{
-		let data = JSON.parse(body);
-		console.log(new Date().getTime()-start);
-		res.render("show", {data: data});
-	})
+	// request(url, (error, response, body)=>{
+	// 	if(!error && response.statusCode == 200){
+	// 		let data = JSON.parse(body);
+	// 		console.log(new Date().getTime()-start);
+	// 		console.log(data);
+	// 		res.render("show", {data: data});
+	// 	}else{
+	// 		res.send("ERROR OCCURED IN FETCHING THE DATA");
+	// 	}
+	// });
+	res.render("show", {data: movieDetails});
 }
 
 // app.get("/", (req, res)=>{
@@ -1367,4 +1373,35 @@ var upcoming = {
 "minimum": "2020-05-08"
 },
 "total_pages": 5
+}
+
+var movieDetails = {
+  Title: 'Extraction',
+  Year: '2020',
+  Rated: 'R',
+  Released: '24 Apr 2020',
+  Runtime: '116 min',
+  Genre: 'Action, Thriller',
+  Director: 'Sam Hargrave',
+  Writer: 'Joe Russo (screenplay), Ande Parks (based on the graphic novel "Ciudad" by), Ande Parks (from story by), Joe Russo (from story by), Anthony Russo (from story by), Fernando León González (with illustrations by)',
+  Actors: 'Chris Hemsworth, Bryon Lerum, Ryder Lerum, Rudhraksh Jaiswal',
+  Plot: "Tyler Rake, a fearless black market mercenary, embarks on the most deadly extraction of his career when he's enlisted to rescue the kidnapped son of an imprisoned international crime lord.",
+  Language: 'English, Hindi, Bengali',
+  Country: 'USA',
+  Awards: 'N/A',
+  Poster: 'https://m.media-amazon.com/images/M/MV5BMDJiNzUwYzEtNmQ2Yy00NWE4LWEwNzctM2M0MjE0OGUxZTA3XkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg',
+  Ratings: [
+    { Source: 'Internet Movie Database', Value: '6.8/10' },
+    { Source: 'Metacritic', Value: '56/100' }
+  ],
+  Metascore: '56',
+  imdbRating: '6.8',
+  imdbVotes: '87,160',
+  imdbID: 'tt8936646',
+  Type: 'movie',
+  DVD: 'N/A',
+  BoxOffice: 'N/A',
+  Production: 'N/A',
+  Website: 'N/A',
+  Response: 'True'
 }

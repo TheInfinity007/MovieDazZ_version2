@@ -12,7 +12,8 @@ body
 	background-blend-mode: soft-light;
 	position:relative;
 	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-	height: 100%;
+	background-size:cover;
+	min-height: 100vh;
 }
 .navbar
 {
@@ -101,8 +102,8 @@ section.landing:before
 	left:0;
 	width:100%;
 	height: 100vh;
-	background:url(https://images.unsplash.com/photo-1560405177-47dded9830ea?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjF9);
-	/*background: linear-gradient(#0005,#0005), url(https://source.unsplash.com/random/1600×1600/?movies-poster);	*/
+	/*background:url(https://images.unsplash.com/photo-1560405177-47dded9830ea?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjF9);*/
+	background: linear-gradient(#0005,#0005), url(https://source.unsplash.com/random/1600×1600/?movies-poster);	
 	background-size:cover;
 	z-index: -1;
 }

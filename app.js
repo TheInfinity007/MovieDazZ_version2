@@ -37,17 +37,17 @@ getImdbId = function(res, mId){
 }
 grabMovieData = function(res, imdbId){
 	url = `http://www.omdbapi.com/?i=${imdbId}&plot=full&apikey=thewdb`;
-	// request(url, (error, response, body)=>{
-	// 	if(!error && response.statusCode == 200){
-	// 		let data = JSON.parse(body);
-	// 		console.log(new Date().getTime()-start);
-	// 		console.log(data);
-	// 		res.render("show", {data: data});
-	// 	}else{
-	// 		res.send("ERROR OCCURED IN FETCHING THE DATA");
-	// 	}
-	// });
-	res.render("show", {data: movieDetails});
+	request(url, (error, response, body)=>{
+		if(!error && response.statusCode == 200){
+			let data = JSON.parse(body);
+			console.log(new Date().getTime()-start);
+			console.log(data);
+			res.render("show", {data: data});
+		}else{
+			res.send("ERROR OCCURED IN FETCHING THE DATA");
+		}
+	});
+	// res.render("show", {data: movieDetails});
 }
 
 // app.get("/", (req, res)=>{

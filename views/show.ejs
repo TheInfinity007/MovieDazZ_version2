@@ -1,6 +1,6 @@
 <%- include('partials/header') %>
 
-<main id="show-wrapper" style="background-image:url(https://m.media-amazon.com/images/M/MV5BMDJiNzUwYzEtNmQ2Yy00NWE4LWEwNzctM2M0MjE0OGUxZTA3XkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg);">
+<main id="show-wrapper" style="background-image:url(<%= data['Poster'] %>);">
 
 	<div class="container-fluid" id="show">
 		<div class="row p-2 p-md-5">
@@ -24,6 +24,7 @@
 					<ul class="">
 						<li class="icon"><a href=""><i class="fa fa-heart"></i></a></li>
 						<li class="icon"><a href=""><i class="fa fa-bookmark"></i></a></li>
+						<li class="icon"><a href=""><i class="fa fa-download"></i></a></li>
 						<li class="play-trailer-wrapper">
 							<a href=""><i class="fa fa-play"></i> Play Trailer
 							</a>

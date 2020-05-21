@@ -141,6 +141,33 @@ app.get("/", (req, res)=>{
 	res.render("index", {trendingMovies: myTrendingMovies, theatreMovies: theatreMovies, upcomingMovies: upcomingMovies});
 });
 
+app.get('/movie', (req, res)=>{
+	let popularMovies = [];
+	data = popularMovie;
+	data["results"].forEach((result)=>{
+		if(result["poster_path"] === null) return;
+		let temp = [];
+		temp.push(result["id"]);
+		temp.push(result["vote_average"]);
+		temp.push(result["title"]);
+		temp.push(result["release_date"]);
+		temp.push(result["poster_path"]);
+		popularMovies.push(temp);
+	});
+
+	// url = `https://api.themoviedb.org/3/movie/popular?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
+	// request(url, (error, response, body)=>{
+	// 	if(!error && response.statusCode == 200){
+	// 		let data = JSON.parse(body);
+	// 		console.log(data);
+	// 		res.render("movie", {data: data});
+	// 	}else{
+	// 		res.send("ERROR OCCURED IN FETCHING THE DATA");
+	// 	}
+	// });
+	res.render("movie", {data: popularMovies});
+});
+
 app.get('/movie/:movie_id', async (req, res)=>{
 	start = new Date().getTime();
 	let movieId = req.params.movie_id.substr(0, req.params.movie_id.indexOf('-'));
@@ -165,6 +192,423 @@ app.listen(process.env.PORT || 3000, ()=>{
 });
 
 
+var popularMovie = {
+"page": 1,
+"total_results": 10000,
+"total_pages": 500,
+"results": [
+{
+"popularity": 507.351,
+"vote_count": 3427,
+"video": false,
+"poster_path": "/xBHvZcjRiWyobQ9kxBhO6B2dtRI.jpg",
+"id": 419704,
+"adult": false,
+"backdrop_path": "/5BwqwxMEjeFtdknRV792Svo0K1v.jpg",
+"original_language": "en",
+"original_title": "Ad Astra",
+"genre_ids": [
+18,
+878
+],
+"title": "Ad Astra",
+"vote_average": 6,
+"overview": "The near future, a time when both hope and hardships drive humanity to look to the stars and beyond. While a mysterious phenomenon menaces to destroy life on planet Earth, astronaut Roy McBride undertakes a mission across the immensity of space and its many perils to uncover the truth about a lost expedition that decades before boldly faced emptiness and silence in search of the unknown.",
+"release_date": "2019-09-17"
+},
+{
+"popularity": 258.564,
+"vote_count": 513,
+"video": false,
+"poster_path": "/zG2l9Svw4PTldWJAzC171Y3d6G8.jpg",
+"id": 385103,
+"adult": false,
+"backdrop_path": "/b5Fej0UT6gPFd2GcGEWw4SAwGUM.jpg",
+"original_language": "en",
+"original_title": "Scoob!",
+"genre_ids": [
+12,
+16,
+35,
+9648,
+10751
+],
+"title": "Scoob!",
+"vote_average": 8.1,
+"overview": "In Scooby-Doo’s greatest adventure yet, see the never-before told story of how lifelong friends Scooby and Shaggy first met and how they joined forces with young detectives Fred, Velma, and Daphne to form the famous Mystery Inc. Now, with hundreds of cases solved, Scooby and the gang face their biggest, toughest mystery ever: an evil plot to unleash the ghost dog Cerberus upon the world. As they race to stop this global “dogpocalypse,” the gang discovers that Scooby has a secret legacy and an epic destiny greater than anyone ever imagined.",
+"release_date": "2020-05-15"
+},
+{
+"popularity": 160,
+"vote_count": 2324,
+"video": false,
+"poster_path": "/8WUVHemHFH2ZIP6NWkwlHWsyrEL.jpg",
+"id": 338762,
+"adult": false,
+"backdrop_path": "/ocUrMYbdjknu2TwzMHKT9PBBQRw.jpg",
+"original_language": "en",
+"original_title": "Bloodshot",
+"genre_ids": [
+28,
+18,
+878
+],
+"title": "Bloodshot",
+"vote_average": 7.1,
+"overview": "After he and his wife are murdered, marine Ray Garrison is resurrected by a team of scientists. Enhanced with nanotechnology, he becomes a superhuman, biotech killing machine—'Bloodshot'. As Ray first trains with fellow super-soldiers, he cannot recall anything from his former life. But when his memories flood back and he remembers the man that killed both him and his wife, he breaks out of the facility to get revenge, only to discover that there's more to the conspiracy than he thought.",
+"release_date": "2020-03-05"
+},
+{
+"popularity": 114.479,
+"vote_count": 2037,
+"video": false,
+"poster_path": "/wlfDxbGEsW58vGhFljKkcR5IxDj.jpg",
+"id": 545609,
+"adult": false,
+"backdrop_path": "/1R6cvRtZgsYCkh8UFuWFN33xBP4.jpg",
+"original_language": "en",
+"original_title": "Extraction",
+"genre_ids": [
+28,
+18,
+53
+],
+"title": "Extraction",
+"vote_average": 7.5,
+"overview": "Tyler Rake, a fearless mercenary who offers his services on the black market, embarks on a dangerous mission when he is hired to rescue the kidnapped son of a Mumbai crime lord…",
+"release_date": "2020-04-24"
+},
+{
+"popularity": 113.276,
+"vote_count": 3959,
+"video": false,
+"poster_path": "/h4VB6m0RwcicVEZvzftYZyKXs6K.jpg",
+"id": 495764,
+"adult": false,
+"backdrop_path": "/kvbbK2rLGSJh9rf6gg1i1iVLYQS.jpg",
+"original_language": "en",
+"original_title": "Birds of Prey (and the Fantabulous Emancipation of One Harley Quinn)",
+"genre_ids": [
+28,
+35,
+80
+],
+"title": "Birds of Prey (and the Fantabulous Emancipation of One Harley Quinn)",
+"vote_average": 7.2,
+"overview": "Harley Quinn joins forces with a singer, an assassin and a police detective to help a young girl who had a hit placed on her after she stole a rare diamond from a crime lord.",
+"release_date": "2020-02-05"
+},
+{
+"popularity": 107.574,
+"vote_count": 4038,
+"video": false,
+"poster_path": "/aQvJ5WPzZgYVDrxLX4R6cLJCEaQ.jpg",
+"id": 454626,
+"adult": false,
+"backdrop_path": "/stmYfCUGd8Iy6kAMBr6AmWqx8Bq.jpg",
+"original_language": "en",
+"original_title": "Sonic the Hedgehog",
+"genre_ids": [
+28,
+35,
+878,
+10751
+],
+"title": "Sonic the Hedgehog",
+"vote_average": 7.5,
+"overview": "Based on the global blockbuster videogame franchise from Sega, Sonic the Hedgehog tells the story of the world’s speediest hedgehog as he embraces his new home on Earth. In this live-action adventure comedy, Sonic and his new best friend team up to defend the planet from the evil genius Dr. Robotnik and his plans for world domination.",
+"release_date": "2020-02-12"
+},
+{
+"popularity": 107.286,
+"vote_count": 218,
+"video": false,
+"poster_path": "/A2YlIrzypvhS3vTFMcDkG3xLvac.jpg",
+"id": 582596,
+"adult": false,
+"backdrop_path": "/1xQtvgay8rDwSaZPwyhcecqV8UD.jpg",
+"original_language": "en",
+"original_title": "The Wrong Missy",
+"genre_ids": [
+35,
+10749
+],
+"title": "The Wrong Missy",
+"vote_average": 6.1,
+"overview": "A guy meets the woman of his dreams and invites her to his company's corporate retreat, but realizes he sent the invite to the wrong person.",
+"release_date": "2020-05-13"
+},
+{
+"popularity": 104.871,
+"vote_count": 4967,
+"video": false,
+"poster_path": "/iZf0KyrE25z1sage4SYFLCCrMi9.jpg",
+"id": 530915,
+"adult": false,
+"backdrop_path": "/2lBOQK06tltt8SQaswgb8d657Mv.jpg",
+"original_language": "en",
+"original_title": "1917",
+"genre_ids": [
+28,
+18,
+36,
+53,
+10752
+],
+"title": "1917",
+"vote_average": 7.9,
+"overview": "At the height of the First World War, two young British soldiers must cross enemy territory and deliver a message that will stop a deadly attack on hundreds of soldiers.",
+"release_date": "2019-12-25"
+},
+{
+"popularity": 95.028,
+"vote_count": 4516,
+"video": false,
+"poster_path": "/pjeMs3yqRmFL3giJy4PMXWZTTPa.jpg",
+"id": 330457,
+"adult": false,
+"backdrop_path": "/xJWPZIYOEFIjZpBL7SVBGnzRYXp.jpg",
+"original_language": "en",
+"original_title": "Frozen II",
+"genre_ids": [
+12,
+16,
+10751
+],
+"title": "Frozen II",
+"vote_average": 7.2,
+"overview": "Elsa, Anna, Kristoff and Olaf head far into the forest to learn the truth about an ancient mystery of their kingdom.",
+"release_date": "2019-11-20"
+},
+{
+"popularity": 92.127,
+"vote_count": 9342,
+"video": false,
+"poster_path": "/qa6HCwP4Z15l3hpsASz3auugEW6.jpg",
+"id": 920,
+"adult": false,
+"backdrop_path": "/sd4xN5xi8tKRPrJOWwNiZEile7f.jpg",
+"original_language": "en",
+"original_title": "Cars",
+"genre_ids": [
+12,
+16,
+35,
+10751
+],
+"title": "Cars",
+"vote_average": 6.8,
+"overview": "Lightning McQueen, a hotshot rookie race car driven to succeed, discovers that life is about the journey, not the finish line, when he finds himself unexpectedly detoured in the sleepy Route 66 town of Radiator Springs. On route across the country to the big Piston Cup Championship in California to compete against two seasoned pros, McQueen gets to know the town's offbeat characters.",
+"release_date": "2006-06-08"
+},
+{
+"popularity": 91.598,
+"vote_count": 1845,
+"video": false,
+"poster_path": "/f4aul3FyD3jv3v4bul1IrkWZvzq.jpg",
+"id": 508439,
+"adult": false,
+"backdrop_path": "/xFxk4vnirOtUxpOEWgA1MCRfy6J.jpg",
+"original_language": "en",
+"original_title": "Onward",
+"genre_ids": [
+12,
+16,
+35,
+14,
+10751
+],
+"title": "Onward",
+"vote_average": 7.9,
+"overview": "In a suburban fantasy world, two teenage elf brothers embark on an extraordinary quest to discover if there is still a little magic left out there.",
+"release_date": "2020-02-29"
+},
+{
+"popularity": 90.271,
+"vote_count": 4619,
+"video": false,
+"poster_path": "/db32LaOibwEliAmSL2jjDF6oDdj.jpg",
+"id": 181812,
+"adult": false,
+"backdrop_path": "/jOzrELAzFxtMx2I4uDGHOotdfsS.jpg",
+"original_language": "en",
+"original_title": "Star Wars: The Rise of Skywalker",
+"genre_ids": [
+28,
+12,
+878
+],
+"title": "Star Wars: The Rise of Skywalker",
+"vote_average": 6.5,
+"overview": "The surviving Resistance faces the First Order once again as the journey of Rey, Finn and Poe Dameron continues. With the power and knowledge of generations behind them, the final battle begins.",
+"release_date": "2019-12-18"
+},
+{
+"popularity": 89.083,
+"vote_count": 418,
+"video": false,
+"poster_path": "/c01Y4suApJ1Wic2xLmaq1QYcfoZ.jpg",
+"id": 618344,
+"adult": false,
+"backdrop_path": "/sQkRiQo3nLrQYMXZodDjNUJKHZV.jpg",
+"original_language": "en",
+"original_title": "Justice League Dark: Apokolips War",
+"genre_ids": [
+28,
+12,
+16,
+14,
+878
+],
+"title": "Justice League Dark: Apokolips War",
+"vote_average": 8.5,
+"overview": "Earth is decimated after intergalactic tyrant Darkseid has devastated the Justice League in a poorly executed war by the DC Super Heroes. Now the remaining bastions of good – the Justice League, Teen Titans, Suicide Squad and assorted others – must regroup, strategize and take the war to Darkseid in order to save the planet and its surviving inhabitants.",
+"release_date": "2020-05-05"
+},
+{
+"popularity": 89.031,
+"vote_count": 12547,
+"video": false,
+"poster_path": "/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg",
+"id": 475557,
+"adult": false,
+"backdrop_path": "/f5F4cRhQdUbyVbB5lTNCwUzD6BP.jpg",
+"original_language": "en",
+"original_title": "Joker",
+"genre_ids": [
+80,
+18,
+53
+],
+"title": "Joker",
+"vote_average": 8.2,
+"overview": "During the 1980s, a failed stand-up comedian is driven insane and turns to a life of crime and chaos in Gotham City while becoming an infamous psychopathic crime figure.",
+"release_date": "2019-10-02"
+},
+{
+"popularity": 85.911,
+"vote_count": 7408,
+"video": false,
+"poster_path": "/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg",
+"id": 496243,
+"adult": false,
+"backdrop_path": "/ApiBzeaa95TNYliSbQ8pJv4Fje7.jpg",
+"original_language": "ko",
+"original_title": "기생충",
+"genre_ids": [
+35,
+18,
+53
+],
+"title": "Parasite",
+"vote_average": 8.5,
+"overview": "All unemployed, Ki-taek's family takes peculiar interest in the wealthy and glamorous Parks for their livelihood until they get entangled in an unexpected incident.",
+"release_date": "2019-05-30"
+},
+{
+"popularity": 81.438,
+"vote_count": 16883,
+"video": false,
+"poster_path": "/wuMc08IPKEatf9rnMNXvIDxqP4W.jpg",
+"id": 671,
+"adult": false,
+"backdrop_path": "/hziiv14OpD73u9gAak4XDDfBKa2.jpg",
+"original_language": "en",
+"original_title": "Harry Potter and the Philosopher's Stone",
+"genre_ids": [
+12,
+14,
+10751
+],
+"title": "Harry Potter and the Philosopher's Stone",
+"vote_average": 7.9,
+"overview": "Harry Potter has lived under the stairs at his aunt and uncle's house his whole life. But on his 11th birthday, he learns he's a powerful wizard -- with a place waiting for him at the Hogwarts School of Witchcraft and Wizardry. As he learns to harness his newfound powers with the help of the school's kindly headmaster, Harry uncovers the truth about his parents' deaths -- and about the villain who's to blame.",
+"release_date": "2001-11-16"
+},
+{
+"popularity": 81.051,
+"vote_count": 18170,
+"video": false,
+"poster_path": "/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg",
+"id": 299536,
+"adult": false,
+"backdrop_path": "/lmZFxXgJE3vgrciwuDib0N8CfQo.jpg",
+"original_language": "en",
+"original_title": "Avengers: Infinity War",
+"genre_ids": [
+28,
+12,
+878
+],
+"title": "Avengers: Infinity War",
+"vote_average": 8.3,
+"overview": "As the Avengers and their allies have continued to protect the world from threats too large for any one hero to handle, a new danger has emerged from the cosmic shadows: Thanos. A despot of intergalactic infamy, his goal is to collect all six Infinity Stones, artifacts of unimaginable power, and use them to inflict his twisted will on all of reality. Everything the Avengers have fought for has led up to this moment - the fate of Earth and existence itself has never been more uncertain.",
+"release_date": "2018-04-25"
+},
+{
+"popularity": 78.641,
+"vote_count": 3964,
+"video": false,
+"poster_path": "/y95lQLnuNKdPAzw9F9Ab8kJ80c3.jpg",
+"id": 38700,
+"adult": false,
+"backdrop_path": "/upUy2QhMZEmtypPW3PdieKLAHxh.jpg",
+"original_language": "en",
+"original_title": "Bad Boys for Life",
+"genre_ids": [
+28,
+80,
+53
+],
+"title": "Bad Boys for Life",
+"vote_average": 7.2,
+"overview": "Marcus and Mike are forced to confront new threats, career changes, and midlife crises as they join the newly created elite team AMMO of the Miami police department to take down the ruthless Armando Armas, the vicious leader of a Miami drug cartel.",
+"release_date": "2020-01-15"
+},
+{
+"popularity": 77.003,
+"vote_count": 1892,
+"video": false,
+"poster_path": "/5EufsDwXdY2CVttYOk2WtYhgKpa.jpg",
+"id": 570670,
+"adult": false,
+"backdrop_path": "/uZMZyvarQuXLRqf3xdpdMqzdtjb.jpg",
+"original_language": "en",
+"original_title": "The Invisible Man",
+"genre_ids": [
+27,
+878,
+53
+],
+"title": "The Invisible Man",
+"vote_average": 7.1,
+"overview": "When Cecilia's abusive ex takes his own life and leaves her his fortune, she suspects his death was a hoax. As a series of coincidences turn lethal, Cecilia works to prove that she is being hunted by someone nobody can see.",
+"release_date": "2020-02-26"
+},
+{
+"popularity": 74.183,
+"vote_count": 5867,
+"video": false,
+"poster_path": "/3iYQTLGoy7QnjcUYRJy4YrAgGvp.jpg",
+"id": 420817,
+"adult": false,
+"backdrop_path": "/v4yVTbbl8dE1UP2dWu5CLyaXOku.jpg",
+"original_language": "en",
+"original_title": "Aladdin",
+"genre_ids": [
+12,
+35,
+14,
+10749,
+10751
+],
+"title": "Aladdin",
+"vote_average": 7.1,
+"overview": "A kindhearted street urchin named Aladdin embarks on a magical adventure after finding a lamp that releases a wisecracking genie while a power-hungry Grand Vizier vies for the same lamp that has the power to make their deepest wishes come true.",
+"release_date": "2019-05-22"
+}
+]
+};
 
 var trendingMovies = {
 	"page": 1,

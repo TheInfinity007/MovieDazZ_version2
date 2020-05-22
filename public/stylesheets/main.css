@@ -183,13 +183,17 @@ form label
 }
 a.page-link
 {
-	background: #555;
-	color:#fff;
+	background: rgb(210, 210, 210);
+	color:#800080;
 }
-li.disabled a.page-link
+.page-item.disabled .page-link
 {
-	background:#666 !important;
-	color:rgba(255,255,255,0.8) !important;
+	background:rgb(204, 204, 204) !important;
+	border-color:purple;
+}
+.page-link
+{
+	border-color:purple;
 }
 footer
 {

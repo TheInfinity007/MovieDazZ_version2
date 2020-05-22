@@ -165,8 +165,71 @@ app.get('/movie', (req, res)=>{
 	// 		res.send("ERROR OCCURED IN FETCHING THE DATA");
 	// 	}
 	// });
-	res.render("movie", {data: popularMovies});
+	let pageTitle = "Popular";
+	res.render("movie", {data: popularMovies, pageTitle: pageTitle});
 });
+
+getMovies = function(url, pageTitle, pageUrl, pageNo, res){
+	request(url, (error, response, body)=>{
+		if(!error && response.statusCode == 200){
+			let data = JSON.parse(body);
+			let movies = [];
+			data["results"].forEach((result)=>{
+				if(result["poster_path"] === null) return;
+				let temp = [];
+				temp.push(result["id"]);
+				temp.push(result["vote_average"]);
+				temp.push(result["title"]);
+				temp.push(result["release_date"]);
+				temp.push(result["poster_path"]);
+				movies.push(temp);
+			});
+			res.render("movie", {
+				data: movies, 
+				pageTitle: pageTitle,
+				pageUrl: pageUrl,
+				current: pageNo,
+				pages: data["total_pages"]
+			});
+		}else{
+			res.send("ERROR OCCURED IN FETCHING THE DATA");
+		}
+	});
+}
+
+app.get('/movie/in-theatre', (req, res)=>{
+	let pageNo = 1;
+	if(req.query.page){
+		pageNo = parseInt(req.query.page);
+	}
+	url = `https://api.themoviedb.org/3/movie/now_playing?page=${pageNo}&api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
+	let pageTitle = "In Theatre";
+	let pageUrl = "in-theatre";
+	getMovies(url, pageTitle, pageUrl, pageNo, res);
+});
+
+app.get('/movie/evergreen', (req, res)=>{
+	let pageNo = 1;
+	if(req.query.page){
+		pageNo = parseInt(req.query.page);
+	}
+	let url = `https://api.themoviedb.org/3/movie/top_rated?page=${pageNo}&api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
+	let pageTitle = "Evergreen";
+	let pageUrl = "evergreen";
+	getMovies(url, pageTitle, pageUrl, pageNo, res);
+});
+
+app.get('/movie/upcoming', (req, res)=>{
+	let pageNo = 1;
+	if(req.query.page){
+		pageNo = parseInt(req.query.page);
+	}
+	let url = `https://api.themoviedb.org/3/movie/upcoming?page=${pageNo}&api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
+	let pageTitle = "Upcoming";
+	let pageUrl = "upcoming";
+	getMovies(url, pageTitle, pageUrl, pageNo, res);
+});
+
 
 app.get('/movie/:movie_id', async (req, res)=>{
 	start = new Date().getTime();

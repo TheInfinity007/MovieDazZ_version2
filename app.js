@@ -1,9 +1,7 @@
 const express = require('express');
-const request = require('request');
 const app = express();
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const ExternalIds = require("./models/externalId");
 
 //requiring routes
 var indexRoute = require('./routes/index');

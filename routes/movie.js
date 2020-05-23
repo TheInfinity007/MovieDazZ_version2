@@ -4,6 +4,8 @@ const request = require('request');
 const ExternalIds = require("../models/externalId");
 
 
+var externalIdsData = {};
+
 getImdbId = function(res, mId){
 	let url = `https://api.themoviedb.org/3/movie/${mId}/external_ids?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
 	console.log(url);
@@ -15,7 +17,7 @@ getImdbId = function(res, mId){
 			ExternalIds.create({tmdbId: mId, imdbId: imdbId}, (err, obj)=>{
 				console.log("New = " + obj);
 			})
-			externalIdsData[mId] = imdbId;
+			// externalIdsData[mId] = imdbId;
 			grabMovieData(res, imdbId);
 		}else{
 			res.send("ERROR OCCURED");

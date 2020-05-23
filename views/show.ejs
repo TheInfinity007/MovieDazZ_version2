@@ -45,6 +45,7 @@
 									<th colspan="2">Ratings</th>
 								</thead>
 								<tbody>
+									<% if(data["Ratings"]){ %>
 									<% data["Ratings"].forEach((rating)=>{ %>
 										<% if(rating['Source'] == 'Internet Movie Database'){ %>
 											<tr>
@@ -63,6 +64,7 @@
 											</tr>
 										<% } %>
 									<% }); %>
+									<% } %>
 								</tbody>
 							</table>
 						</div>	

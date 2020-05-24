@@ -5,14 +5,14 @@ const request = require('request');
 var start;
 var successCounter = 0;
 var  errorCounter= 0;
-var myTrendingMovies = [];
+var trendingMovies = [];
 var theatreMovies = [];
 var upcomingMovies = [];
 
 checkMovies = function(res){
 	if(successCounter == 3){
 		console.log(new  Date().getTime() - start);
-		res.render("index", {trendingMovies: myTrendingMovies, theatreMovies: theatreMovies, upcomingMovies: upcomingMovies});
+		res.render("index", {trendingMovies: trendingMovies, theatreMovies: theatreMovies, upcomingMovies: upcomingMovies});
 	}else if(errorCounter > 0){
 		res.send("Error Occured in Getting The movies");
 	}
@@ -31,7 +31,7 @@ grabTrendingMovies = function(res){
 				temp.push(result["title"]);
 				temp.push(result["release_date"]);
 				temp.push(result["poster_path"]);
-				myTrendingMovies.push(temp);
+				trendingMovies.push(temp);
 			});
 			successCounter++;
 			console.log("Grab1");
@@ -89,25 +89,15 @@ grabUpcomingMovies = function(res){
 		}else{
 			errorCounter++;
 			console.log("Exit 3");
-			res.send("ERROR OCCURED Exit 3");
 		}
 	});
 }
 
 router.get("/", (req, res)=>{
 	start = new Date().getTime();
-	if(successCounter == 3){
-		console.log("Submitted Local Data");
-		checkMovies(res);
-	}else{
-		counter = 0;
-		myTrendingMovies = [];
-		theatreMovies = [];
-		upcomingMovies = [];
-		grabTrendingMovies(res);
-		grabTheatreMovies(res);
-		grabUpcomingMovies(res);
-	}
-});	
+	grabTrendingMovies(res);
+	grabTheatreMovies(res);
+	grabUpcomingMovies(res);
+});
 
 module.exports = router;

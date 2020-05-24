@@ -27,9 +27,7 @@ getImdbId = function(res, mId){
 }
 
 grabMovieData = function(res, imdbId){
-	if(imdbId == null){
-		res.send("Data Not Found Exit 1")
-	}
+	if(imdbId == null)	return res.send("IMDB ID IS NOT DEFINED FOR THIS MOVIE");
 	url = `http://www.omdbapi.com/?i=${imdbId}&plot=full&apikey=thewdb`;
 	console.log(url);
 	request(url, (error, response, body)=>{
@@ -50,7 +48,7 @@ grabMovieData = function(res, imdbId){
 	});
 }
 
-getMovies = function(url, pageTitle, pageUrl, pageNo, res){
+getMovies = function(res, url, pageTitle, pageUrl, pageNo){
 	request(url, (error, response, body)=>{
 		if(!error && response.statusCode == 200){
 			let data = JSON.parse(body);
@@ -91,7 +89,7 @@ router.get('/', (req, res)=>{
 	let url = `https://api.themoviedb.org/3/movie/popular?page=${pageNo}&api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
 	let pageTitle = "Popular";
 	let pageUrl = "";
-	getMovies(url, pageTitle, pageUrl, pageNo, res);
+	getMovies(res, url, pageTitle, pageUrl, pageNo);
 });
 
 router.get('/in-theatre', (req, res)=>{
@@ -103,7 +101,7 @@ router.get('/in-theatre', (req, res)=>{
 	url = `https://api.themoviedb.org/3/movie/now_playing?page=${pageNo}&api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
 	let pageTitle = "In Theatre";
 	let pageUrl = "in-theatre";
-	getMovies(url, pageTitle, pageUrl, pageNo, res);
+	getMovies(res, url, pageTitle, pageUrl, pageNo);
 });
 
 router.get('/evergreen', (req, res)=>{
@@ -115,7 +113,7 @@ router.get('/evergreen', (req, res)=>{
 	let url = `https://api.themoviedb.org/3/movie/top_rated?page=${pageNo}&api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
 	let pageTitle = "Evergreen";
 	let pageUrl = "evergreen";
-	getMovies(url, pageTitle, pageUrl, pageNo, res);
+	getMovies(res, url, pageTitle, pageUrl, pageNo);
 });
 
 router.get('/upcoming', (req, res)=>{
@@ -127,7 +125,7 @@ router.get('/upcoming', (req, res)=>{
 	let url = `https://api.themoviedb.org/3/movie/upcoming?page=${pageNo}&api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
 	let pageTitle = "Upcoming";
 	let pageUrl = "upcoming";
-	getMovies(url, pageTitle, pageUrl, pageNo, res);
+	getMovies(res, url, pageTitle, pageUrl, pageNo);
 });
 
 router.get('/trending', (req, res)=>{
@@ -139,7 +137,7 @@ router.get('/trending', (req, res)=>{
 	let url = `https://api.themoviedb.org/3/trending/movie/day?page=${pageNo}&api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
 	let pageTitle = "Trending";
 	let pageUrl = "trending";
-	getMovies(url, pageTitle, pageUrl, pageNo, res);
+	getMovies(res, url, pageTitle, pageUrl, pageNo);
 })
 
 router.get('/:movie_id', async (req, res)=>{

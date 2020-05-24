@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 var indexRoute = require('./routes/index');
 var movieRoute = require('./routes/movie');
 
-var url = "mongodb://localhost/moviedazz";
+var url = "mongodb+srv://infinity:<infinity>@cluster0-fyitp.mongodb.net/test?retryWrites=true&w=majority" || "mongodb://localhost/moviedazz";
 mongoose.set('useUnifiedTopology', true);
 mongoose.set('useCreateIndex', true);
 mongoose.connect(url, {useNewUrlParser: true, useFindAndModify:false});
@@ -18,7 +18,6 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 app.use('/', indexRoute);
 app.use("/movie", movieRoute);
-
 
 app.listen(process.env.PORT || 3000, ()=>{
 	console.log('MovieDazZ Has Started');

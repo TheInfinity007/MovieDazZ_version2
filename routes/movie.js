@@ -19,6 +19,8 @@ getImdbId = function(res, mId){
 			});
 			grabMovieData(res, imdbId);
 		}else{
+			if(error)console.log("Error = ", error);
+			if(response){console.log("Status Code = ", response.statusCode);}
 			res.send("ERROR OCCURED");
 		}
 	});
@@ -72,6 +74,8 @@ getMovies = function(url, pageTitle, pageUrl, pageNo, res){
 				pages: data["total_pages"]
 			});
 		}else{
+			if(error)console.log("Error = ", error);
+			if(response){console.log("Status Code = ", response.statusCode);}
 			res.send("ERROR OCCURED IN FETCHING THE DATA");
 		}
 	});

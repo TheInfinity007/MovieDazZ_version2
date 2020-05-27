@@ -19,9 +19,9 @@ getImdbId = function(res, mId){
 			});
 			grabMovieData(res, imdbId);
 		}else{
-			if(error)console.log("Error = ", error);
-			if(response){console.log("Status Code = ", response.statusCode);}
-			res.send("ERROR OCCURED");
+			if(error)console.log("Error1 = ", error);
+			if(response){console.log("Status Code1 = ", response.statusCode);}
+			res.redirect('/');
 		}
 	});
 }
@@ -34,7 +34,6 @@ grabMovieData = function(res, imdbId){
 		if(!error && response.statusCode == 200){
 			let data = JSON.parse(body);
 			if(data.Response == 'True'){
-				console.log("Data = ", data);
 				console.log(new Date().getTime()-start);
 				res.render("show", {data: data});
 			}else{
@@ -80,19 +79,9 @@ getMovies = function(res, url, pageTitle, pageUrl, pageNo){
 }
 
 // /movie route
-router.get('/', (req, res)=>{
-	start = new Date().getTime();
-	let pageNo = 1;
-	if(req.query.page){
-		pageNo = parseInt(req.query.page);
-	}
-	let url = `https://api.themoviedb.org/3/movie/popular?page=${pageNo}&api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
-	let pageTitle = "Popular";
-	let pageUrl = "";
-	getMovies(res, url, pageTitle, pageUrl, pageNo);
-});
 
-router.get('/in-theatre', (req, res)=>{
+
+router.get('/in-theatre/*', (req, res)=>{
 	start = new Date().getTime();
 	let pageNo = 1;
 	if(req.query.page){
@@ -104,7 +93,7 @@ router.get('/in-theatre', (req, res)=>{
 	getMovies(res, url, pageTitle, pageUrl, pageNo);
 });
 
-router.get('/evergreen', (req, res)=>{
+router.get('/evergreen/*', (req, res)=>{
 	start = new Date().getTime();
 	let pageNo = 1;
 	if(req.query.page){
@@ -116,7 +105,7 @@ router.get('/evergreen', (req, res)=>{
 	getMovies(res, url, pageTitle, pageUrl, pageNo);
 });
 
-router.get('/upcoming', (req, res)=>{
+router.get('/upcoming/*', (req, res)=>{
 	start = new Date().getTime();
 	let pageNo = 1;
 	if(req.query.page){
@@ -128,7 +117,7 @@ router.get('/upcoming', (req, res)=>{
 	getMovies(res, url, pageTitle, pageUrl, pageNo);
 });
 
-router.get('/trending', (req, res)=>{
+router.get('/trending/*', (req, res)=>{
 	start = new Date().getTime();
 	let pageNo = 1;
 	if(req.query.page){
@@ -140,7 +129,7 @@ router.get('/trending', (req, res)=>{
 	getMovies(res, url, pageTitle, pageUrl, pageNo);
 })
 
-router.get('/:movie_id', async (req, res)=>{
+router.get('/:movie_id/*', async (req, res)=>{
 	start = new Date().getTime();
 	let movieId = req.params.movie_id.substr(0, req.params.movie_id.indexOf('-'));
 	let imdbId;
@@ -155,6 +144,18 @@ router.get('/:movie_id', async (req, res)=>{
 	}else{
 	 	 grabMovieData(res, imdbId)
 	}
+});
+
+router.get('/*', (req, res)=>{
+	start = new Date().getTime();
+	let pageNo = 1;
+	if(req.query.page){
+		pageNo = parseInt(req.query.page);
+	}
+	let url = `https://api.themoviedb.org/3/movie/popular?page=${pageNo}&api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
+	let pageTitle = "Popular";
+	let pageUrl = "";
+	getMovies(res, url, pageTitle, pageUrl, pageNo);
 });
 
 module.exports = router;

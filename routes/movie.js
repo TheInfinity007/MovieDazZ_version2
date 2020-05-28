@@ -129,6 +129,10 @@ router.get('/trending/*', (req, res)=>{
 	getMovies(res, url, pageTitle, pageUrl, pageNo);
 })
 
+router.get('/i/:imdb_id/*', (req, res)=>{
+	grabMovieData(res, req.params.imdb_id);
+});
+
 router.get('/:movie_id/*', async (req, res)=>{
 	start = new Date().getTime();
 	let movieId = req.params.movie_id.substr(0, req.params.movie_id.indexOf('-'));

@@ -108,64 +108,28 @@ grabUpcomingMovies = function(res){
 	}
 }
 
-router.get('/search/:title/:pageNo/*', (req, res)=>{
-	let url = `http://www.omdbapi.com/?s=${req.params.title}&page=${req.params.pageNo}&apikey=thewdb`;
-	res.send("Welcome to search results");
-});
-
-
-router.get("/search", (req, res)=>{
-	if(req.query.s || req.query.t || req.query.i){
-		let query = req.query;
-		let pageQuery = parseInt(req.query.page);
-		let searchQuery = req.query.t || req.query.i || req.query.s;
-		let searchQueryType = req.query.t?"t" :  (req.query.i ?"i" : "s");
-		let yearQuery = req.query.y;
-
-		var pageNo = pageQuery ? pageQuery : 1;
-
-		// console.log(query);
-		let url;
-		if(searchQueryType === "i" || searchQueryType === "t"){
-			url = "http://www.omdbapi.com/?" + req._parsedUrl.query + "&plot=full&apikey=" + process.env.OMDB_API_KEY;
-		}else{
-			var search = searchQueryType + "=" + searchQuery + "&y=" + yearQuery;
-			url = "http://www.omdbapi.com/?" + search + "&page=" + pageNo + "&apikey=" + process.env.OMDB_API_KEY;
+router.get('/search/:type/:title/:pageNo/*', (req, res)=>{
+	let url = `http://www.omdbapi.com/?s=${req.params.title}&page=${req.params.pageNo}&type=movie&apikey=thewdb`;
+	request(url, (error, response, body)=>{
+		if(!error && response.statusCode == 200){
+			var data = JSON.parse(body);
+			res.render("result", {
+				data: data,
+				search: req.params.title,
+				current: req.params.pageNo,
+				pages: Math.ceil(data["totalResults"]/10)
+			});
 		}
-		// console.log(url);
-		let msg = "";
-		request(url, (error, response, body)=>{
-			if(!error && response.statusCode == 200){
-				var data = JSON.parse(body);
-				// console.log(response.statusCode);
-				if((query.t || query.i) && data.Response == "True"){
-					res.render("show", {data : data});
-				}else if(data.Response == "True"){
-					res.render("results", {
-						data : data,
-						search : search,
-						current: pageNo,
-						pages: Math.ceil(data['totalResults']/10),
-					});
-				}else{
-					console.log(data);
-					if(data.Error == "Too many results."){
-						msg = data.Error + " Please type a meaningful word.";
-						return res.render("search", {msg : msg});
-					}
-					res.redirect("back");
-				}
-			}else{
-				console.log(error);
-				// msg = "Error Occured! Please Try again";
-				res.redirect("back");
-			}
-		});
-	}else{
-		res.redirect("/");
-	}
+	})
 });
 
+router.get('/login/*', (req, res)=>{
+	res.render("login");
+});
+
+router.get('/register/*', (req, res)=>{
+	res.render("register");
+});
 
 router.get("/*", (req, res)=>{
 	errorCounter = 0;

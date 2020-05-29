@@ -20,7 +20,7 @@ checkMovies = function(res){
 
 grabTrendingMovies = function(res){
 	url = "https://api.themoviedb.org/3/trending/movie/day?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9";
-	if(errorCounter == 0){
+	if(errorCounter < 1){
 		request(url, (error, response, body)=>{
 			if(!error && response.statusCode == 200){
 				let data = JSON.parse(body);
@@ -42,7 +42,7 @@ grabTrendingMovies = function(res){
 				console.log("Exit 1");
 			}
 		});
-	}else if(errorCounter == 1){
+	}else if(errorCounter > 0){
 		res.redirect("/");
 		errorCounter++;
 	}
@@ -50,7 +50,7 @@ grabTrendingMovies = function(res){
 
 grabTheatreMovies = function(res){
 	let url = "https://api.themoviedb.org/3/movie/now_playing?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9";
-	if(errorCounter == 0){
+	if(errorCounter < 1){
 		request(url, (error, response, body)=>{
 			if(!error && response.statusCode == 200){
 				let data = JSON.parse(body);
@@ -72,7 +72,7 @@ grabTheatreMovies = function(res){
 				console.log("Exit 2");
 			}
 		});
-	}else if(errorCounter == 1){
+	}else if(errorCounter > 0){
 		res.redirect("/");
 		errorCounter++;
 	}
@@ -80,7 +80,7 @@ grabTheatreMovies = function(res){
 
 grabUpcomingMovies = function(res){
 	let url = "https://api.themoviedb.org/3/movie/upcoming?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9";
-	if(errorCounter == 0){
+	if(errorCounter < 1){
 		request(url, (error, response, body)=>{
 			if(!error && response.statusCode == 200){
 				let data = JSON.parse(body);
@@ -102,7 +102,7 @@ grabUpcomingMovies = function(res){
 				console.log("Exit 3");
 			}
 		});
-	}else if(errorCounter == 1){
+	}else if(errorCounter > 0){
 		res.redirect("/");
 		errorCounter++;
 	}

@@ -319,3 +319,53 @@ section.landing:before
 	padding:5px 15px;
 }
 
+
+/*LOGIN PAGE CSS*/
+#login-page, #register-page
+{
+	width:100vw;
+	height: 100vh;
+	background: linear-gradient(#0005,#0005), url(https://source.unsplash.com/random/1600×1600/?movies);
+	background-size: cover;
+	background-repeat: no-repeat;
+	padding-top:57.2px;
+	display: flex;
+	justify-content: center;
+	align-items: center;	
+	box-sizing: border-box;
+}
+#login-page .form-wrapper,
+#register-page .form-wrapper
+{
+	background: rgba(0, 0, 0, .39);
+	position: relative;
+	width:60%;
+	height: 100%;
+	color: #fff; 
+	margin:0 auto;
+	-webkit-backdrop-filter: blur(15px);
+    -moz-backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px);
+    padding:40px 0;
+}
+.form-wrapper form
+{
+	width:100%;
+	padding:0 80px;
+}
+.form-wrapper h1
+{
+	font-weight: bold;
+}
+.form-wrapper form .btn-primary
+{
+	background: purple;
+	border-color:purple;
+}
+#login-page a,
+#register-page a
+{
+	color:purple;
+	text-decoration: none;
+}
+

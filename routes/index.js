@@ -1,6 +1,9 @@
-var express = require("express");
-var router = express.Router();
+const express = require("express");
+const router = express.Router();
 const request = require('request');
+const passport = require('passport');
+const User = require('../models/user');
+
 
 var start;
 var successCounter = 0;
@@ -123,12 +126,50 @@ router.get('/search/:type/:title/:pageNo/*', (req, res)=>{
 	})
 });
 
+
+// Signup Route
+router.get('/register/*', (req, res)=>{
+	res.render("register");
+});
+
+// Handle Signup Logic
+router.post('/register', (req, res)=>{
+	console.log(req.body);
+	let password = req.body.password;
+	let newUser = new User({
+		username: req.body.username
+	});
+	User.register(newUser, password, (err, user)=>{
+		if(err){
+			console.log("The Error is =  " + err);
+			res.redirect("/");
+		}else{
+			console.log(user);
+			passport.authenticate("local")(req, res, ()=>{
+				console.log("User has been Created");
+				res.redirect("/");
+			});
+		}
+	});
+});
+
+// Login Route
 router.get('/login/*', (req, res)=>{
 	res.render("login");
 });
 
-router.get('/register/*', (req, res)=>{
-	res.render("register");
+// Handle Login Logic
+router.post('/login', passport.authenticate("local", {
+		successRedirect: "/",
+		failureRedirect: "/login/"
+	}), (req, res)=>{
+})
+
+// Logout Route
+router.get('/logout/', (req, res)=>{
+	req.logout();
+	console.log("Logout the User");
+	res.redirect('/');
 });
 
 router.get("/*", (req, res)=>{

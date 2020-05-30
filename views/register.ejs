@@ -5,7 +5,7 @@
 			<div class="form-wrapper">
 				<h1 class="text-center">Sign Up</h1>	
 				<div class="">
-					<form method="POST" id="register-form">
+					<form method="POST" id="register-form" action="/register">
 						<div class="form-group">
 							<label for = "username" class = "control-label">Username:</label>
 							<input type="text" name="username" id="username" placeholder="john123" class="form-control" required>
@@ -40,16 +40,19 @@
 	var pwd = document.querySelector("#password");
 	var pwdError = document.querySelector("#pwd-error");
 	registerForm.addEventListener("submit", function(event){
-		console.log("HII");
-		console.log(confirmPwd);
-		console.log(confirmPwd.val());
-		console.log(pwd.val());
 		event.preventDefault();
-		// if(confirmPwd.val() !== pwd.val()){
-		// 	pwdError.style.display = "block";
-		// }else{
-		// 	pwdError.style.display = "block";
-		// 	$("#register-form").attr("action", "/register");
-		// }
+		if(confirmPwd.value !== pwd.value){
+			pwdError.style.display = "block";
+		}else{
+			pwdError.style.display = "none";
+			registerForm.submit();
+		}
 	});
-</script>
+	confirmPwd.addEventListener('keyup', function(){
+		if(confirmPwd.value !== pwd.value){
+			pwdError.style.display = "block";
+		}else{
+			pwdError.style.display = "none";
+		}
+	})
+</script>	

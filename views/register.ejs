@@ -5,7 +5,7 @@
 			<div class="form-wrapper">
 				<h1 class="text-center">Sign Up</h1>	
 				<div class="">
-					<form action="/register" method="POST">
+					<form method="POST" id="register-form">
 						<div class="form-group">
 							<label for = "username" class = "control-label">Username:</label>
 							<input type="text" name="username" id="username" placeholder="john123" class="form-control" required>
@@ -17,6 +17,8 @@
 						<div class="form-group">
 							<label for = "confirm-pwd" class = "control-label">Confirm Password:</label>
 							<input type="password" name="confirm-pwd" id="confirm-pwd" placeholder="*******" class="form-control" required>
+
+							<p id="pwd-error"><small>The Password Doesn't match!</small></p>
 						</div>
 						<div class="form-group">
 							<input class = "btn btn-lg btn-primary btn-block" type="submit" value = "Sign Up">	
@@ -32,3 +34,22 @@
 	</div>	
 </main>
 <%- include('partials/footer') %>
+<script type="text/javascript">
+	var registerForm = document.querySelector("#register-form");
+	var confirmPwd = document.querySelector("#confirm-pwd");
+	var pwd = document.querySelector("#password");
+	var pwdError = document.querySelector("#pwd-error");
+	registerForm.addEventListener("submit", function(event){
+		console.log("HII");
+		console.log(confirmPwd);
+		console.log(confirmPwd.val());
+		console.log(pwd.val());
+		event.preventDefault();
+		// if(confirmPwd.val() !== pwd.val()){
+		// 	pwdError.style.display = "block";
+		// }else{
+		// 	pwdError.style.display = "block";
+		// 	$("#register-form").attr("action", "/register");
+		// }
+	});
+</script>

@@ -347,7 +347,9 @@ section.landing:before
     -moz-backdrop-filter: blur(15px);
     backdrop-filter: blur(15px);
     padding:40px 0;
+    border-radius: 8px;
 }
+
 .form-wrapper form
 {
 	width:100%;
@@ -362,10 +364,23 @@ section.landing:before
 	background: purple;
 	border-color:purple;
 }
+.form-wrapper form .btn-primary:focus
+{	
+	box-shadow: 0 0 0 0.2rem rgb(106, 9, 106);
+}
+.form-wrapper form .form-control:focus
+{
+	box-shadow: 0 0 0 0.1rem rgba(106, 9, 106, 1);
+}
 #login-page a,
 #register-page a
 {
 	color:#d255d2;
 	text-decoration: none;
+}
+#register-page #pwd-error
+{
+	color:#e81a2e;
+	display: none;
 }
 

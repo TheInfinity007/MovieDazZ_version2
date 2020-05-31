@@ -13,7 +13,7 @@ var theatreMovies = [];
 var upcomingMovies = [];
 
 checkMovies = function(res){
-	if(successCounter == 3){
+	if(trendingMovies.length > 0 && theatreMovies.length > 0 && upcomingMovies.length > 0){
 		console.log(new  Date().getTime() - start);
 		res.render("index", {trendingMovies: trendingMovies, theatreMovies: theatreMovies, upcomingMovies: upcomingMovies});
 	}else if(errorCounter > 0){
@@ -47,7 +47,7 @@ grabTrendingMovies = function(res){
 		});
 	}else if(errorCounter > 0){
 		res.redirect("/");
-		errorCounter++;
+		errorCounter = 0;
 	}
 }
 
@@ -77,7 +77,7 @@ grabTheatreMovies = function(res){
 		});
 	}else if(errorCounter > 0){
 		res.redirect("/");
-		errorCounter++;
+		errorCounter = 0;
 	}
 }
 
@@ -107,7 +107,7 @@ grabUpcomingMovies = function(res){
 		});
 	}else if(errorCounter > 0){
 		res.redirect("/");
-		errorCounter++;
+		errorCounter = 0;
 	}
 }
 
@@ -166,19 +166,34 @@ router.post('/login', passport.authenticate("local", {
 })
 
 // Logout Route
-router.get('/logout/', (req, res)=>{
+router.get('/logout/*', (req, res)=>{
 	req.logout();
 	console.log("Logout the User");
 	res.redirect('/');
 });
 
+router.get('/favourite/:imdbId', (req, res)=>{
+	User.findById(req.user._id, (err, user)=>{
+		if(err){
+			console.log("Error Occured in Adding the items to favourites");
+			console.log(err);
+			return res.redirect('/');
+		}
+		user.favouriteMovieList.push(req.params.imdbId);
+		user.save();
+		console.log("Add the item to the favourites movie list");
+		res.redirect('back');
+	});
+});
+
+
 router.get("/*", (req, res)=>{
 	errorCounter = 0;
 	successCounter = 0;
 	start = new Date().getTime();
-	grabTrendingMovies(res);
-	grabTheatreMovies(res);
-	grabUpcomingMovies(res);
+	if(trendingMovies.length < 1)	 grabTrendingMovies(res);
+	if(theatreMovies.length < 1) grabTheatreMovies(res);
+	if(upcomingMovies.length < 1)	grabUpcomingMovies(res);
 });
 
 module.exports = router;

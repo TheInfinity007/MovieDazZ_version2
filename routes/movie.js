@@ -8,16 +8,22 @@ var start;
 
 getImdbId = function(res, mId){
 	let url = `https://api.themoviedb.org/3/movie/${mId}/external_ids?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
+	let validId = false;
+	let imdbId;
 	console.log(url);
 	request(url, (error, response, body)=>{
 		if(!error && response.statusCode == 200){
 			let data = JSON.parse(body);
-			let imdbId = data['imdb_id'];
+			imdbId = data['imdb_id'];
+			validId = true;
 			console.log(imdbId);
 			ExternalIds.create({tmdbId: mId, imdbId: imdbId}, (err, obj)=>{
 				console.log("New = " + obj);
 			});
 			grabMovieData(res, imdbId);
+			if(validId){
+				console.log("This is a valid Id");
+			}
 		}else{
 			if(error)console.log("Error1 = ", error);
 			if(response){console.log("Status Code1 = ", response.statusCode);}
@@ -47,6 +53,7 @@ grabMovieData = function(res, imdbId){
 	});
 }
 
+// FOR MOVIE CATEGORY
 getMovies = function(res, url, pageTitle, pageUrl, pageNo){
 	request(url, (error, response, body)=>{
 		if(!error && response.statusCode == 200){
@@ -78,9 +85,8 @@ getMovies = function(res, url, pageTitle, pageUrl, pageNo){
 	});
 }
 
-// /movie route
 
-
+// MOVIE ROUTE
 router.get('/in-theatre/*', (req, res)=>{
 	start = new Date().getTime();
 	let pageNo = 1;
@@ -129,10 +135,12 @@ router.get('/trending/*', (req, res)=>{
 	getMovies(res, url, pageTitle, pageUrl, pageNo);
 })
 
+//FOR SEARCH PAGE
 router.get('/i/:imdb_id/*', (req, res)=>{
 	grabMovieData(res, req.params.imdb_id);
 });
 
+// TO GET THE DETAILS ABOUT A MOVIE IN HOME PAGE MOVIES CATEGORIES PAGE
 router.get('/:movie_id/*', async (req, res)=>{
 	start = new Date().getTime();
 	let movieId = req.params.movie_id.substr(0, req.params.movie_id.indexOf('-'));

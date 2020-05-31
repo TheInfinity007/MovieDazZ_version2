@@ -3,6 +3,7 @@ const router = express.Router();
 const request = require('request');
 const passport = require('passport');
 const User = require('../models/user');
+const middleware = require('../middleware');
 
 
 var start;
@@ -22,8 +23,8 @@ checkMovies = function(res){
 }
 
 grabTrendingMovies = function(res){
-	url = "https://api.themoviedb.org/3/trending/movie/day?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9";
-	if(errorCounter < 1){
+	if(trendingMovies.length < 1){
+		url = "https://api.themoviedb.org/3/trending/movie/day?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9";
 		request(url, (error, response, body)=>{
 			if(!error && response.statusCode == 200){
 				let data = JSON.parse(body);
@@ -37,23 +38,19 @@ grabTrendingMovies = function(res){
 					temp.push(result["poster_path"]);
 					trendingMovies.push(temp);
 				});
-				successCounter++;
 				console.log("Grab1");
 				checkMovies(res);
 			}else{
-				errorCounter++;
 				console.log("Exit 1");
+				grabTrendingMovies(res);
 			}
 		});
-	}else if(errorCounter > 0){
-		res.redirect("/");
-		errorCounter = 0;
 	}
 }
 
 grabTheatreMovies = function(res){
-	let url = "https://api.themoviedb.org/3/movie/now_playing?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9";
-	if(errorCounter < 1){
+	if(theatreMovies.length < 1){
+		let url = "https://api.themoviedb.org/3/movie/now_playing?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9";
 		request(url, (error, response, body)=>{
 			if(!error && response.statusCode == 200){
 				let data = JSON.parse(body);
@@ -67,23 +64,19 @@ grabTheatreMovies = function(res){
 					temp.push(result["poster_path"]);
 					theatreMovies.push(temp);
 				});
-				successCounter++;
 				console.log("Grab2");
 				checkMovies(res);
 			}else{
-				errorCounter++;
 				console.log("Exit 2");
+				grabTheatreMovies(res);
 			}
 		});
-	}else if(errorCounter > 0){
-		res.redirect("/");
-		errorCounter = 0;
 	}
 }
 
 grabUpcomingMovies = function(res){
-	let url = "https://api.themoviedb.org/3/movie/upcoming?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9";
-	if(errorCounter < 1){
+	if(upcomingMovies.length < 1){
+		let url = "https://api.themoviedb.org/3/movie/upcoming?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9";
 		request(url, (error, response, body)=>{
 			if(!error && response.statusCode == 200){
 				let data = JSON.parse(body);
@@ -97,17 +90,13 @@ grabUpcomingMovies = function(res){
 					temp.push(result["poster_path"]);
 					upcomingMovies.push(temp);
 				});
-				successCounter++;
 				console.log("Grab3");
 				checkMovies(res);
 			}else{
-				errorCounter++;
 				console.log("Exit 3");
+				grabUpcomingMovies(res);
 			}
 		});
-	}else if(errorCounter > 0){
-		res.redirect("/");
-		errorCounter = 0;
 	}
 }
 
@@ -141,7 +130,7 @@ router.post('/register', (req, res)=>{
 	});
 	User.register(newUser, password, (err, user)=>{
 		if(err){
-			console.log("The Error is =  " + err);
+			console.log(err);
 			res.redirect("/");
 		}else{
 			console.log(user);
@@ -159,10 +148,11 @@ router.get('/login/*', (req, res)=>{
 });
 
 // Handle Login Logic
-router.post('/login', passport.authenticate("local", {
-		successRedirect: "/",
-		failureRedirect: "/login/"
+router.post('/login', passport.authenticate('local', {
+		successRedirect: '/',
+		failureRedirect: '/login/'
 	}), (req, res)=>{
+	console.log("Loggin the user");
 })
 
 // Logout Route
@@ -172,7 +162,7 @@ router.get('/logout/*', (req, res)=>{
 	res.redirect('/');
 });
 
-router.get('/favourite/:imdbId', (req, res)=>{
+router.get('/favourite/:imdbId/', middleware.isLoggedIn, (req, res)=>{
 	User.findById(req.user._id, (err, user)=>{
 		if(err){
 			console.log("Error Occured in Adding the items to favourites");
@@ -181,19 +171,33 @@ router.get('/favourite/:imdbId', (req, res)=>{
 		}
 		user.favouriteMovieList.push(req.params.imdbId);
 		user.save();
-		console.log("Add the item to the favourites movie list");
+		console.log("Added item to favourites");
+		res.redirect('back');
+	});
+});
+
+router.get('/watchlist/:imdbId/', middleware.isLoggedIn, (req, res)=>{
+	User.findById(req.user._id, (err, user)=>{
+		if(err){
+			console.log(err);
+			return res.redirect('/');
+		}
+		user.watchList.push(req.params.imdbId);
+		user.save();
+		console.log("Added item to watchlist");
 		res.redirect('back');
 	});
 });
 
 
 router.get("/*", (req, res)=>{
-	errorCounter = 0;
-	successCounter = 0;
+	trendingMovies = [];
+	theatreMovies = [];
+	upcomingMovies = [];
 	start = new Date().getTime();
-	if(trendingMovies.length < 1)	 grabTrendingMovies(res);
-	if(theatreMovies.length < 1) grabTheatreMovies(res);
-	if(upcomingMovies.length < 1)	grabUpcomingMovies(res);
+	grabTrendingMovies(res);
+	grabTheatreMovies(res);
+	grabUpcomingMovies(res);
 });
 
 module.exports = router;

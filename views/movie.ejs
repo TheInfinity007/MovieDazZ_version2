@@ -11,22 +11,24 @@
 		<div class="row card-wrapper">
 			<% data.forEach((movie)=>{ %>
 				<div class="col-6 col-md-3">
-					<a href="/movie/<%= movie[0]%>-<%=movie[2].split(' ').join('-')%>/">
-						<div class="movie-card mx-auto">
+					<div class="movie-card mx-auto">
+						<a href="/movie/<%= movie[0]%>-<%=movie[2].split(' ').join('-')%>/">
 							<div class="img">
 								<img src="https://image.tmdb.org/t/p/original<%= movie[4]%>" class="">
-								<div class="">
-									<span class="favourite" title="Add to Favourites">
-										<i class="fa fa-heart"></i>
-									</span>
-								</div>	
 							</div>
-							<div class="card-content">
-								<h5 title="<%=movie[2]%>"><% if(movie[2].length > 20){%><%= movie[2].slice(0, 17)%>...<%}else{%><%= movie[2]%><%}%></h5>
-								<div class="card-release"><%=movie[3]%></div>
-							</div>
+						</a>
+						<div class="">
+							<span class="favourite" title="Add to Favourites">
+								<a href="/favourite/<%= movie[0]%>/">
+									<i class="fa fa-heart"></i>
+								</a>
+							</span>
+						</div>	
+						<div class="card-content">
+							<h5 title="<%=movie[2]%>"><% if(movie[2].length > 20){%><%= movie[2].slice(0, 17)%>...<%}else{%><%= movie[2]%><%}%></h5>
+							<div class="card-release"><%=movie[3]%></div>
 						</div>
-					</a>
+					</div>
 				</div>
 			<% }); %>
 		</div>

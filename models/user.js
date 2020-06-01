@@ -5,6 +5,12 @@ var userSchema = new mongoose.Schema({
 	username:{type: String, unique: true, required: true},
 	password: String,
 	favouriteMovieList: [String],
+	favouriteMovies: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Movie"
+		}
+	],
 	watchList: [String]
 })
 

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-var movieSchema = new mongoos.Schema({
+var movieSchema = new mongoose.Schema({
 	title:String,
 	imdbId: { type:String, unique: true },
 	imgUrl: String,

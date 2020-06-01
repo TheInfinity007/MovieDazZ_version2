@@ -4,6 +4,7 @@ const request = require('request');
 const passport = require('passport');
 const User = require('../models/user');
 const middleware = require('../middleware');
+const Movie = require('../models/movie');
 
 
 var start;
@@ -16,9 +17,7 @@ var upcomingMovies = [];
 checkMovies = function(res){
 	if(trendingMovies.length > 0 && theatreMovies.length > 0 && upcomingMovies.length > 0){
 		console.log(new  Date().getTime() - start);
-		res.render("index", {trendingMovies: trendingMovies, theatreMovies: theatreMovies, upcomingMovies: upcomingMovies});
-	}else if(errorCounter > 0){
-		res.send("Error Occured in Getting The movies");
+		return res.render("index", {trendingMovies: trendingMovies, theatreMovies: theatreMovies, upcomingMovies: upcomingMovies});
 	}
 }
 
@@ -162,7 +161,59 @@ router.get('/logout/*', (req, res)=>{
 	res.redirect('/');
 });
 
-router.get('/favourite/:imdbId/', middleware.isLoggedIn, (req, res)=>{
+isNumber = function(num){
+	if(!parseInt(num)){
+        return false;		//This is a string
+    }else{
+        return true;		//This is a Number
+    }
+}
+
+addToFavouriteMovie = async function(id, title, img, rel){
+	if(isNumber(id)){			//the id is the tmdb id
+		// await getImdbId(id);
+	}else{
+		console.log("HELLO");
+		let newMovie = new Movie({
+			imdbId: id,
+			title:title,
+			imgUrl: img,
+			release: rel
+		});
+		Movie.create(newMovie, (err, movie)=>{
+			if(err){
+				console.log(err);
+				res.redirect('back');
+			}else{
+				console.log("Add a New Movie");
+			}
+		});		
+	}
+}
+
+// router.get('/favourite/:imdbId/', middleware.isLoggedIn, (req, res)=>{
+// 	let imdbId = req.params.imdbId;
+// 	if(isNumber(imdbId)){
+// 		console.log("This is TMDB ID");
+// 	}else{
+// 		// addToFavouriteMovie(imdbId);
+// 	}
+// 	User.findById(req.user._id, (err, user)=>{
+// 		if(err){
+// 			console.log("Error Occured in Adding the items to favourites");
+// 			console.log(err);
+// 			return res.redirect('/');
+// 		}
+// 		user.favouriteMovieList.push(req.params.imdbId);
+// 		user.save();
+// 		console.log("Added item to favourites");
+// 	});
+// 	res.redirect('back');
+// });
+
+router.get('/favourite/:imdbId/:title/:release/:img/*', middleware.isLoggedIn, (req, res)=>{
+	console.log("Enter the favourite route");
+	addToFavouriteMovie(req.params.imdbId, req.params.title, req.params.img, req.params.release);
 	User.findById(req.user._id, (err, user)=>{
 		if(err){
 			console.log("Error Occured in Adding the items to favourites");
@@ -172,9 +223,9 @@ router.get('/favourite/:imdbId/', middleware.isLoggedIn, (req, res)=>{
 		user.favouriteMovieList.push(req.params.imdbId);
 		user.save();
 		console.log("Added item to favourites");
-		res.redirect('back');
 	});
-});
+	res.redirect('back');
+})
 
 router.get('/watchlist/:imdbId/', middleware.isLoggedIn, (req, res)=>{
 	User.findById(req.user._id, (err, user)=>{

@@ -169,47 +169,44 @@ isNumber = function(num){
     }
 }
 
-addToFavouriteMovie = async function(id, title, img, rel){
-	if(isNumber(id)){			//the id is the tmdb id
-		// await getImdbId(id);
-	}else{
-		console.log("HELLO");
-		let newMovie = new Movie({
-			imdbId: id,
-			title:title,
-			imgUrl: img,
-			release: rel
-		});
-		Movie.create(newMovie, (err, movie)=>{
-			if(err){
-				console.log(err);
-				res.redirect('back');
-			}else{
-				console.log("Add a New Movie");
-			}
-		});		
-	}
+getImdbId = function(id){
+	let url = `https://api.themoviedb.org/3/movie/${mId}/external_ids?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
+	console.log(url);
+	request(url, (error, response, body)=>{
+		if(!error && response.statusCode == 200){
+			let data = JSON.parse(body);
+			imdbId = data['imdb_id'];
+			validId = true;
+			console.log(imdbId);
+			return imdbId;
+		}else{
+			if(error)console.log("Error1 = ", error);
+			if(response){console.log("Status Code1 = ", response.statusCode);}
+			return getImdbId(id);
+		}
+	});
 }
 
-// router.get('/favourite/:imdbId/', middleware.isLoggedIn, (req, res)=>{
-// 	let imdbId = req.params.imdbId;
-// 	if(isNumber(imdbId)){
-// 		console.log("This is TMDB ID");
-// 	}else{
-// 		// addToFavouriteMovie(imdbId);
-// 	}
-// 	User.findById(req.user._id, (err, user)=>{
-// 		if(err){
-// 			console.log("Error Occured in Adding the items to favourites");
-// 			console.log(err);
-// 			return res.redirect('/');
-// 		}
-// 		user.favouriteMovieList.push(req.params.imdbId);
-// 		user.save();
-// 		console.log("Added item to favourites");
-// 	});
-// 	res.redirect('back');
-// });
+addToFavouriteMovie = async function(id, title, img, rel){
+	if(isNumber(id)){			//if the id is the tmdb id
+		this.id = await getImdbId(id);
+	}
+	console.log("The id is ", id);
+	let newMovie = new Movie({
+		imdbId: id,
+		title:title,
+		imgUrl: img,
+		release: rel
+	});
+	Movie.create(newMovie, (err, movie)=>{
+		if(err){
+			console.log(err);
+		}else{
+			console.log("Add a New Movie");
+		}
+	});
+}
+
 
 router.get('/favourite/:imdbId/:title/:release/:img/*', middleware.isLoggedIn, (req, res)=>{
 	console.log("Enter the favourite route");

@@ -16,13 +16,15 @@
 					<span class="genre px-2"><%= data["Genre"] %></span> | 
 					<span class="released px-2"><%= data['Released'] %></span>
 				</div>
+				
 				<div class="details">
 					<span class="language">Language - <%= data['Language'] %></span> | 
 					<span class="country">Country - <%= data['Country'] %></span>
 				</div>
+
 				<div class="icon-wrapper">
 					<ul class="">
-						<li class="icon"><a href="/favourite/<%= data['imdbID'] %>/<%=data['Title'].split(' ').join('-')%>/<%= data['Released'] %>/<%= data['Poster']%>/*"><i class="fa fa-heart"></i></a></li>
+						<li class="icon"><a href="/favourite/<%= data['imdbID'] %>/<%=data['Title'].split(' ').join('-')%>/<%= data['Released'] %>/<%= data['Poster']%>"><i class="fa fa-heart"></i></a></li>
 						<li class="icon"><a href="/watchlist/<%= data['imdbID'] %>"><i class="fa fa-bookmark"></i></a></li>
 						<li class="icon"><a href=""><i class="fa fa-download"></i></a></li>
 						<li class="play-trailer-wrapper">
@@ -30,8 +32,8 @@
 							</a>
 						</span>
 					</ul>
-					
 				</div>
+
 				<div class="plot my-5">	
 					<h4>Overview</h4>
 					<p><%= data['Plot'] %></p>

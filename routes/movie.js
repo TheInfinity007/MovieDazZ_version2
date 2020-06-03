@@ -27,7 +27,7 @@ getImdbId = function(res, mId){
 		}else{
 			if(error)console.log("Error1 = ", error);
 			if(response){console.log("Status Code1 = ", response.statusCode);}
-			res.redirect('/');
+			// res.redirect('/');
 		}
 	});
 }

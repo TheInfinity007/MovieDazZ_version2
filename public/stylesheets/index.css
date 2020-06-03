@@ -250,6 +250,10 @@ section.landing:before
 {
 	color:red;
 }
+.movie-card .fa-heart.active:hover
+{
+	color:red;
+}
 .card-content
 {
 	width:100%;

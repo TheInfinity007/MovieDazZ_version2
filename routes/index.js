@@ -169,29 +169,22 @@ isNumber = function(num){
     }
 }
 
-getImdbId = function(id){
-	let url = `https://api.themoviedb.org/3/movie/${mId}/external_ids?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
-	console.log(url);
+getImdb = function(id, title, img, rel){
+	let url = `https://api.themoviedb.org/3/movie/${id}/external_ids?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
 	request(url, (error, response, body)=>{
 		if(!error && response.statusCode == 200){
 			let data = JSON.parse(body);
 			imdbId = data['imdb_id'];
-			validId = true;
-			console.log(imdbId);
-			return imdbId;
+			addToFavouriteMovie(imdbId, title, img, rel);
 		}else{
-			if(error)console.log("Error1 = ", error);
-			if(response){console.log("Status Code1 = ", response.statusCode);}
-			return getImdbId(id);
+			if(error)console.log("Error2 = ", error);
+			if(response){console.log("Status Code2 = ", response.statusCode);}
 		}
 	});
 }
 
+
 addToFavouriteMovie = async function(id, title, img, rel){
-	if(isNumber(id)){			//if the id is the tmdb id
-		this.id = await getImdbId(id);
-	}
-	console.log("The id is ", id);
 	let newMovie = new Movie({
 		imdbId: id,
 		title:title,
@@ -208,18 +201,32 @@ addToFavouriteMovie = async function(id, title, img, rel){
 }
 
 
-router.get('/favourite/:imdbId/:title/:release/:img/*', middleware.isLoggedIn, (req, res)=>{
-	console.log("Enter the favourite route");
-	addToFavouriteMovie(req.params.imdbId, req.params.title, req.params.img, req.params.release);
+router.get('/favourite/:imdbId/:title/:release/*', middleware.isLoggedIn, (req, res)=>{	
+	let img = req.params[0];
 	User.findById(req.user._id, (err, user)=>{
 		if(err){
 			console.log("Error Occured in Adding the items to favourites");
 			console.log(err);
 			return res.redirect('/');
 		}
-		user.favouriteMovieList.push(req.params.imdbId);
-		user.save();
-		console.log("Added item to favourites");
+
+		let newMovie = user.favouriteMovieList.every((movieId)=>{
+			return movieId != req.params.imdbId;
+		});
+
+		if(newMovie){
+			if(isNumber(req.params.imdbId)){			//if the id is the tmdb id
+				getImdb(req.params.imdbId, req.params.title, img, req.params.release);
+			}else{
+				addToFavouriteMovie(req.params.imdbId, req.params.title, img, req.params.release);
+			}
+
+			user.favouriteMovieList.push(req.params.imdbId);
+			user.save();
+			console.log("Added item to favourites");
+		}else{
+			console.log("Movie already added to favourites");
+		}
 	});
 	res.redirect('back');
 })

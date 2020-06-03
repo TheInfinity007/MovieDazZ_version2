@@ -13,11 +13,15 @@ var  errorCounter= 0;
 var trendingMovies = [];
 var theatreMovies = [];
 var upcomingMovies = [];
+var isRender = false;
 
 checkMovies = function(res){
-	if(trendingMovies.length > 0 && theatreMovies.length > 0 && upcomingMovies.length > 0){
-		console.log(new  Date().getTime() - start);
-		return res.render("index", {trendingMovies: trendingMovies, theatreMovies: theatreMovies, upcomingMovies: upcomingMovies});
+	if(isRender == false){
+		if(trendingMovies.length > 0 && theatreMovies.length > 0 && upcomingMovies.length > 0){
+			console.log(new  Date().getTime() - start);
+			isRender = true;
+			res.render("index", {trendingMovies: trendingMovies, theatreMovies: theatreMovies, upcomingMovies: upcomingMovies});
+		}
 	}
 }
 
@@ -90,7 +94,7 @@ grabUpcomingMovies = function(res){
 					upcomingMovies.push(temp);
 				});
 				console.log("Grab3");
-				checkMovies(res);
+				checkMovies(res);	
 			}else{
 				console.log("Exit 3");
 				grabUpcomingMovies(res);
@@ -169,22 +173,27 @@ isNumber = function(num){
     }
 }
 
-getImdb = function(id, title, img, rel){
+getImdb = function(req, id, title, img, rel){
 	let url = `https://api.themoviedb.org/3/movie/${id}/external_ids?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
 	request(url, (error, response, body)=>{
 		if(!error && response.statusCode == 200){
 			let data = JSON.parse(body);
 			imdbId = data['imdb_id'];
 			addToFavouriteMovie(imdbId, title, img, rel);
-		}else{
-			if(error)console.log("Error2 = ", error);
-			if(response){console.log("Status Code2 = ", response.statusCode);}
+			User.findById(req.user._id, (err, user)=>{
+				if(err){
+					console.log(err);
+				}else{
+					user.favouriteMovieList.push(imdbId);
+					user.save();
+				}
+			});
 		}
 	});
 }
 
 
-addToFavouriteMovie = async function(id, title, img, rel){
+addToFavouriteMovie = function(id, title, img, rel){
 	let newMovie = new Movie({
 		imdbId: id,
 		title:title,
@@ -198,6 +207,27 @@ addToFavouriteMovie = async function(id, title, img, rel){
 			console.log("Add a New Movie");
 		}
 	});
+}
+
+getTmdb = function(req, id){
+	let url = `https://api.themoviedb.org/3/find/${id}?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9&external_source=imdb_id`;
+	request(url, (error, response, body)=>{
+		if(!error && response.statusCode == 200){
+			let data = JSON.parse(body);
+
+			let tmdbId = data["movie_results"][0]["id"];
+			console.log("TMDB ID IS ", tmdbId);
+
+			User.findById(req.user._id, (err, user)=>{
+				if(err){
+					console.log(err);
+				}else{
+					user.favouriteMovieList.push(tmdbId);
+					user.save();
+				}
+			});
+		}
+	});	
 }
 
 
@@ -216,8 +246,9 @@ router.get('/favourite/:imdbId/:title/:release/*', middleware.isLoggedIn, (req, 
 
 		if(newMovie){
 			if(isNumber(req.params.imdbId)){			//if the id is the tmdb id
-				getImdb(req.params.imdbId, req.params.title, img, req.params.release);
+				getImdb(req, req.params.imdbId, req.params.title, img, req.params.release);
 			}else{
+				getTmdb(req, req.params.imdbId);
 				addToFavouriteMovie(req.params.imdbId, req.params.title, img, req.params.release);
 			}
 
@@ -229,7 +260,11 @@ router.get('/favourite/:imdbId/:title/:release/*', middleware.isLoggedIn, (req, 
 		}
 	});
 	res.redirect('back');
-})
+});
+
+router.get('/favourite/*', (req, res)=>{
+	res.render("favourite");
+});
 
 router.get('/watchlist/:imdbId/', middleware.isLoggedIn, (req, res)=>{
 	User.findById(req.user._id, (err, user)=>{
@@ -246,6 +281,7 @@ router.get('/watchlist/:imdbId/', middleware.isLoggedIn, (req, res)=>{
 
 
 router.get("/*", (req, res)=>{
+	isRender = false;
 	trendingMovies = [];
 	theatreMovies = [];
 	upcomingMovies = [];

@@ -241,18 +241,25 @@ section.landing:before
 	right:5%;
 	z-index:5;
 }
-.movie-card .favourite .fa-heart
+.fa-heart
 {
 	color:white;
 	z-index: 5;
 }
-.movie-card .fa-heart:hover
+.fa-heart:hover,
+.fa-heart.active
 {
 	color:red;
 }
-.movie-card .fa-heart.active:hover
+.fa-bookmark:hover,
+.fa-bookmark.active
 {
-	color:red;
+	color:#308d0d;
+}
+.fa-download:hover,
+.fa-download.active
+{
+	color:#17abb4;
 }
 .card-content
 {

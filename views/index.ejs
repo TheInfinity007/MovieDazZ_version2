@@ -15,6 +15,7 @@
 					<div class="hr"></div>
 				</div>
 
+
 				<div class="cards-wrapper">
 					<div class="movie-cards">	
 						<% trendingMovies.forEach((movie)=>{ %>
@@ -27,7 +28,7 @@
 								<div class="">
 									<span class="favourite" title="Add to Favourites">
 										<a href="/favourite/<%= movie[0]%>/<%=movie[2]%>/<%=movie[3]%>/https://image.tmdb.org/t/p/original<%= movie[4]%>">
-											<i class="fa fa-heart"></i>
+											<i class="fa fa-heart <% if(currentUser && currentUser.favouriteMovieList.some((id)=>{ return id == movie[0]})){ %>active<%}%>"></i>
 										</a>
 									</span>
 								</div>
@@ -58,7 +59,7 @@
 								<div class="">
 									<span class="favourite" title="Add to Favourites">
 										<a href="/favourite/<%= movie[0]%>/<%=movie[2]%>/<%=movie[3]%>/https://image.tmdb.org/t/p/original<%= movie[4]%>">
-											<i class="fa fa-heart"></i>
+											<i class="fa fa-heart <% if(currentUser && currentUser.favouriteMovieList.some((id)=>{ return id == movie[0]})){ %>active<%}%>"></i>
 										</a>
 									</span>
 								</div>	
@@ -89,7 +90,7 @@
 								<div class="">
 									<span class="favourite" title="Add to Favourites">
 										<a href="/favourite/<%= movie[0]%>/<%=movie[2]%>/<%=movie[3]%>/https://image.tmdb.org/t/p/original<%= movie[4]%>">
-											<i class="fa fa-heart"></i>
+											<i class="fa fa-heart <% if(currentUser && currentUser.favouriteMovieList.some((id)=>{ return id == movie[0]})){ %>active<%}%>"></i>
 										</a>
 									</span>
 								</div>

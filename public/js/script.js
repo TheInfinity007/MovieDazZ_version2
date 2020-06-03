@@ -4,4 +4,8 @@ searchForm.addEventListener("submit", function(event){
 	let title = $("#search-value").val();
 	$("#search-form").attr("action", "/search/movie/" + title + "/1/");
 	searchForm.submit();
-})
+});
+
+  $(".fa-heart").click(function(){
+    $(this).toggleClass("active");
+  });

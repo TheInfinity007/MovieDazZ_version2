@@ -1,1 +1,47 @@
-<h1>Welcome to Favourites Page</h1>
+<%- include('partials/header')%>
+
+
+
+<main id="movie-wrapper" class="container-fluid">
+	<div class="m-trending">
+		<div class="row">
+			<div class="col-12 main-title">
+				<h1>My Favourites</h1>
+				<div class="hr"></div>
+			</div>
+		</div>
+
+		<% if(!currentUser){ %>
+			<div class="row card-wrapper">
+				<% currentUser.favouriteMovieList.forEach((id)=>{ %>
+					<% if(id[0] == 't'){ %>
+						<div class="col-6 col-md-3">	
+							<div class="movie-card mx-auto">
+								<a href="/movie/<%= movie[0]%>-<%=movie[2].split(' ').join('-')%>/">
+									<div class="img">
+										<img src="https://image.tmdb.org/t/p/original<%= movie[4]%>" class="">
+									</div>
+								</a>
+								<div class="">
+									<span class="favourite" title="Add to Favourites">
+										<a href="/favourite/<%= movie[0]%>/">
+											<i class="fa fa-heart"></i>
+										</a>
+									</span>
+								</div>	
+								<div class="card-content">
+									<h5 title="<%=movie[2]%>"><% if(movie[2].length > 20){%><%= movie[2].slice(0, 17)%>...<%}else{%><%= movie[2]%><%}%></h5>
+									<div class="card-release"><%=movie[3]%></div>
+								</div>
+							</div>
+						</div>
+					<%}%>
+				<% }); %>
+			</div>
+		<% }; %>
+	</div>
+</main>
+
+
+
+<%- include('partials/footer')%>

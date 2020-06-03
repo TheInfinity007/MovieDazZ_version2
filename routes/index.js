@@ -262,7 +262,41 @@ router.get('/favourite/:imdbId/:title/:release/*', middleware.isLoggedIn, (req, 
 	res.redirect('back');
 });
 
+
 router.get('/favourite/*', (req, res)=>{
+	let myUser = {
+	  	favouriteMovieList: [
+	    	'454626',    'tt3794354',
+	    	'647785',    'tt10933680',
+	    	'508439',    'tt7146812',
+	    	'565743',    'tt6803046',
+	    	'711705',    'tt6483422',
+	    	'620883',    'tt12282598',
+	    	'457335',    'tt6902676',
+	    	'481848',    'tt7504726',
+	    	'tt1634106', '338762',
+	    	'38700',     'tt1502397',
+	    	'514847',    'tt8244784'
+	  ],
+	  watchList: [],
+	  _id: '5ed7d935ea86120fe403331a',
+	  favouriteMovies: [],
+	  username: 'potato'
+	}
+
+	User.findById('5ed7d935ea86120fe403331a', (err, user)=>{
+		let myFav = user.favouriteMovieList.filter((id)=>{
+			return id[0] == 't';
+		});
+		let movies = [];
+		myFav.forEach((mId)=>{
+			Movie.findOne({imdbId: mId}, (err, movie)=>{
+				console.log(movie);
+				movies.push(movie);
+			});
+		});
+		console.log(movies);
+	})
 	res.render("favourite");
 });
 

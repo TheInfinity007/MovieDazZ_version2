@@ -275,7 +275,8 @@ section.landing:before
 	font-size:12px;
 }
 
-#movie-wrapper
+#movie-wrapper,
+#favourite-wrapper
 {
 	padding-top:57.2px;
 	padding-bottom:15px;
@@ -395,5 +396,9 @@ section.landing:before
 {
 	color:#e81a2e;
 	display: none;
+}
+#favourite-wrapper .card-release
+{
+	font-size: 14px;
 }
 

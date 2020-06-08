@@ -5,6 +5,7 @@ const passport = require('passport');
 const User = require('../models/user');
 const middleware = require('../middleware');
 const Movie = require('../models/movie');
+const ExternalIds = require("../models/externalId");
 
 
 var start;
@@ -231,6 +232,7 @@ getTmdb = function(req, id){
 }
 
 
+//  NEW ROUTE FOR FAVOURITE
 router.get('/favourite/:imdbId/:title/:release/*', middleware.isLoggedIn, (req, res)=>{	
 	let img = req.params[0];
 	User.findById(req.user._id, (err, user)=>{
@@ -273,14 +275,40 @@ router.get('/favourite/*', (req, res)=>{
 			Movie.findOne({imdbId: mId}, (err, movie)=>{
 				movies.push(movie);
 				if(i == myFav.length-1){
-					console.log("Movies = " + movies);
 					res.render("favourite", {movies: movies});
 				}
 			});
-			
 		});
-	})
-	// res.render("favourite");
+	});
+});
+
+//  DELETE ROUTE FOR FAVOURITES
+router.delete('/favourite/:imdbId', middleware.isLoggedIn, (req, res)=>{
+	User.findById(req.user._id, async (err, user)=>{
+		if(err){
+			console.log("Error occurred in fetching the user");
+			res.redirect("/");
+		}else{
+			let tmdbid;
+			let imdbid = req.params.imdbId;
+			try{
+				let foundContent = await ExternalIds.findOne({imdbId: req.params.imdbId});
+				tmdbid = foundContent.tmdbId;
+			}catch(err){	}
+			let i = -1, t = -1;
+			user.favouriteMovieList.forEach((id, index)=>{
+				if(id == tmdbid)
+					t = index;
+				if(id == imdbid)
+					i = index;
+			});
+			if(i != -1) user.favouriteMovieList.splice(i, 1);
+			if(t != -1) user.favouriteMovieList.splice(t, 1);
+			console.log("Movie removed from favourites");
+			user.save();
+			res.redirect('/favourite/');
+		}
+	});
 });
 
 router.get('/watchlist/:imdbId/', middleware.isLoggedIn, (req, res)=>{

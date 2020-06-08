@@ -401,4 +401,13 @@ section.landing:before
 {
 	font-size: 14px;
 }
+#favourite-wrapper .card-wrapper .movie-card:hover
+{
+	box-shadow: none !important;
+}
+#favourite-wrapper .card-wrapper .row:hover
+{
+		box-shadow: 0 2px 8px rgba(128, 0, 128, 0.92), 0 5px 16px rgba(128, 0, 128, 0.5), 0 5px 18px rgba(128,0,128,0.1);
+}
+
 

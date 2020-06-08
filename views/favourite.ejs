@@ -29,7 +29,7 @@
 									<div class="card-release">Released: <%=movie.release%></div>
 								</div>
 								<div class="card-button pt-1">
-									<form action="" method="POST">
+									<form action="/favourite/<%= movie.imdbId %>?_method=DELETE" method="POST">
 										<button class="btn btn-danger btn-sm">Remove from Favourites</button>
 									</form>
 									<form action="" method="POST">

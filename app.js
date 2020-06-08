@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+const methodOverride = require('method-override');
 
 const User = require('./models/user');
 
@@ -23,6 +24,7 @@ db.once('open', () => console.log("Connected to Mongoose"));
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended:true}));
+app.use(methodOverride("_method"));
 
 /*PASSPORT CONFIGURATION*/
 app.use(require('express-session')({

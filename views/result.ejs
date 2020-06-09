@@ -1,84 +1,87 @@
 <%- include('partials/header') %>
 
-<div class="container mb-5 pb-5">
-	<div class="row">
-		<div class="col-md-12">
-			<div class="heading">
-				<h1 class="text-center">Search Result Page</h1>
-				<a href="/" class=" btn search-again ml-5">Search Again!!</a>
-			</div>
-			<div class="well">
-				Total Results - <span><b><%= data['totalResults'] %></b></span>
-				<div>Showing Page <%= current %> of <%= pages %></div>
-			</div>
-		</div>
-		<% data["Search"].forEach((movie)=>{ %>
-			<%if(movie['Poster'] != 'N/A'){%>		
-				<div class="col-md-6 col-lg-3">
-					<div class="card">
-						<img class="card-img-top" src="<%if(movie['Poster'] == 'N/A'){%>https://res.cloudinary.com/infinity99/image/upload/v1586284960/movieSearchApp/pikachu_zwpedv.jpg<%}else{%><%= movie['Poster'] %><%}%>" alt="<%= movie['Title'] %>.jpg">
-						<div class="card-body text-dark">
-							<h4 class="title"><%= movie['Title'] %> <span class="year"><h5>(<%= movie['Year'] %>)</h5></span></h4>
-							<div>
-								<p><strong>Type - </strong><em class="text-uppercase font-weight-bold"><%= movie['Type'] %></em></p>
+<main id="result-page">
+	<div class="container pb-5">
+		<div class="row">
+			
+			<% data["Search"].forEach((movie)=>{ %>
+				<%if(movie['Poster'] != 'N/A'){%>		
+					<div class="col-md-6 col-lg-3">
+						<div class="card">
+							<img class="card-img-top" src="<%if(movie['Poster'] == 'N/A'){%>https://res.cloudinary.com/infinity99/image/upload/v1586284960/movieSearchApp/pikachu_zwpedv.jpg<%}else{%><%= movie['Poster'] %><%}%>" alt="<%= movie['Title'] %>.jpg">
+							<div class="card-body text-dark">
+								<h4 class="title"><%= movie['Title'] %> <span class="year"><h5>(<%= movie['Year'] %>)</h5></span></h4>
+								<p>
+									<a href="/movie/i/<%= movie['imdbID']%>/" class = "btn btn-primary"> More Info</a>
+								</p>
 							</div>
-							<p>
-								<a href="/movie/i/<%= movie['imdbID']%>/" class = "btn btn-primary"> More Info</a>
-							</p>
+							<div class="">
+								<span class="favourite" title="Add to WatchList">
+									<form method="POST" action="/favourite">
+										<input type="hidden" name="id" value="<%= movie['imdbID']%>">
+										<input type="hidden" name="title" value="<%= movie['Title'] %>">
+										<input type="hidden" name="release" value="<%= movie['Year'] %>">
+										<input type="hidden" name="img" value="<%= movie['Poster'] %>">
+										<button style="background:transparent; border:0;outline: none">
+											<i class="fa fa-bookmark"></i>
+										</button>
+									</form>
+								</span>
+							</div>
 						</div>
 					</div>
-				</div>
-			<%}%>
-		<% }) %>
-	</div>
+				<%}%>
+			<% }) %>
+		</div>
 
 
-	<!-- Pagination Start -->
-	<% if(pages && pages > 0){ %>
-		<ul class="pagination">
-			<% if(current == 1){ %>
-				<li class="page-item disabled"><a class="page-link">First</a></li>
-			<% }else{ %>
-				<li class="page-item"><a href="/search/movie/<% if(search){%><%=search%>/1/<% } %>" class="page-link">First</a></li>
-			<% } %>
-
-			<% if(current == 1){ %>				
-				<li class="page-item disabled"><a class="page-link">«</a></li>
-			<% }else{ %>
-				<li class="page-item"><a href="/search/movie/<% if(search){%><%=search%>/<%= Number(current)-1 %>/<% } %>" class="page-link">«</a></li>
-			<% } %>
-
-			<% var i = Number(current) > 5 ? Number(current)-4 : 1 %>
-			<% if(i !== 1){ %>
-				<li class="page-item disabled"><a class="page-link">...</a></li>
-			<% } %>
-			<% for(; i <= Number(current) + 4 && i <= pages; i++){ %>
-				<% if(i == current){ %>
-					<li class="page-item active"><a href="" class="page-link"><%= i %></a></li>
+		<!-- Pagination Start -->
+		<% if(pages && pages > 0){ %>
+			<ul class="pagination">
+				<% if(current == 1){ %>
+					<li class="page-item disabled"><a class="page-link">First</a></li>
 				<% }else{ %>
-					<li class="page-item"><a href="/search/movie/<% if(search){%><%=search%>/<%= i %>/<% } %>" class="page-link"><%= i %></a></li>
+					<li class="page-item"><a href="/search/movie/<% if(search){%><%=search%>/1/<% } %>" class="page-link">First</a></li>
 				<% } %>
-				<% if(i == Number(current)+4 && i < pages){ %>
+
+				<% if(current == 1){ %>				
+					<li class="page-item disabled"><a class="page-link">«</a></li>
+				<% }else{ %>
+					<li class="page-item"><a href="/search/movie/<% if(search){%><%=search%>/<%= Number(current)-1 %>/<% } %>" class="page-link">«</a></li>
+				<% } %>
+
+				<% var i = Number(current) > 5 ? Number(current)-4 : 1 %>
+				<% if(i !== 1){ %>
 					<li class="page-item disabled"><a class="page-link">...</a></li>
 				<% } %>
-			<% } %>
+				<% for(; i <= Number(current) + 4 && i <= pages; i++){ %>
+					<% if(i == current){ %>
+						<li class="page-item active"><a href="" class="page-link"><%= i %></a></li>
+					<% }else{ %>
+						<li class="page-item"><a href="/search/movie/<% if(search){%><%=search%>/<%= i %>/<% } %>" class="page-link"><%= i %></a></li>
+					<% } %>
+					<% if(i == Number(current)+4 && i < pages){ %>
+						<li class="page-item disabled"><a class="page-link">...</a></li>
+					<% } %>
+				<% } %>
 
-			<% if(current == pages){ %>
-				<li class="page-item disabled"><a class="page-link">»</a></li>
-			<% }else{ %>
-				<li class="page-item"><a href="/search/movie/<% if(search){%><%=search%>/<%= Number(current) + 1 %>/<% } %>" class="page-link">»</a></li>
-			<% } %>
+				<% if(current == pages){ %>
+					<li class="page-item disabled"><a class="page-link">»</a></li>
+				<% }else{ %>
+					<li class="page-item"><a href="/search/movie/<% if(search){%><%=search%>/<%= Number(current) + 1 %>/<% } %>" class="page-link">»</a></li>
+				<% } %>
 
-			<% if(current == pages){ %>
-				<li class="page-item disabled"><a class="page-link">Last</a></li>
-			<% }else{ %>
-				<li class="page-item"><a href="/search/movie/<% if(search){%><%=search%>/<%= pages %>/<% } %>" class="page-link">Last</a></li>
-			<% } %>				
-		</ul>
-	<% } %>
-	
-	
-</div>
+				<% if(current == pages){ %>
+					<li class="page-item disabled"><a class="page-link">Last</a></li>
+				<% }else{ %>
+					<li class="page-item"><a href="/search/movie/<% if(search){%><%=search%>/<%= pages %>/<% } %>" class="page-link">Last</a></li>
+				<% } %>				
+			</ul>
+		<% } %>
+		
+		
+	</div>
+</main>
 <%- include('partials/footer') %>
 
  

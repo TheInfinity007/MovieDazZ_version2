@@ -4,12 +4,21 @@
 	<div class="m-trending">
 		<div class="row">
 			<div class="col-12 main-title">
-				<h1>My Favourites <i class="fa fa-heart" style="color:red"></i></h1>
+				<h1>My <%= pageTitle %> 
+					<% if(pageTitle == "Favourites"){ %>
+						<i class="fa fa-heart" style="color:red"></i>
+					<% }else{%>
+						<i class="fa fa-bookmark" style="color:green"></i>
+					<% }%>
+				</h1>
 				<div class="hr"></div>
 			</div>
 		</div>
 
-		<% if(currentUser){ %>
+		<% if(!movies){ %>
+			<h4 style="margin: 15px auto; text-align: center">No Movies to Show</h4>
+		<% } %>
+		<% if(movies){ %>
 			<div class="row card-wrapper">
 				<% movies.forEach((movie)=>{ %>
 					<div class="col-12 col-md-6">	
@@ -29,12 +38,16 @@
 									<div class="card-release">Released: <%=movie.release%></div>
 								</div>
 								<div class="card-button pt-1">
-									<form action="/favourite/<%= movie.imdbId %>?_method=DELETE" method="POST">
-										<button class="btn btn-danger btn-sm">Remove from Favourites</button>
-									</form>
-									<form action="" method="POST">
-										<button class="btn btn-warning btn-sm mt-1">Remove from Watchlist</button>
-									</form>
+									<% if(currentUser.favouriteMovieList.some((id)=>{ return id == movie.imdbId})){ %>
+										<form action="/favourite/<%= movie.imdbId %>?_method=DELETE" method="POST">
+											<button class="btn btn-danger btn-sm">Remove from Favourites</button>
+										</form>
+									<%}%>
+									<% if(currentUser.watchList.some((id)=>{ return id == movie.imdbId})){ %>
+										<form action="/watchlist/<%= movie.imdbId %>?_method=DELETE" method="POST">
+											<button class="btn btn-warning btn-sm mt-1">Remove from Watchlist</button>
+										</form>
+									<%}%>
 								</div>
 							</div>
 						</div>

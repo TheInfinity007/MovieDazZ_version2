@@ -52,6 +52,7 @@
 	display: inline-block;
 }
 
+li.icon form,
 li.icon a
 {
 	display:inline-block;
@@ -75,8 +76,8 @@ li.play-trailer-wrapper a
 {
 	display: inline-block;
 	height: 40px;
-	position: absolute;
-	top:12px;
+	/*position: absolute;*/
+	/*top:12px;*/
 }
 .plot
 {
@@ -195,15 +196,27 @@ a.page-link
 {
 	border-color:purple;
 }
-footer
+#result-page
 {
-	padding:10px 0;
-	position: absolute;
-	text-align:center;
-	width:100%;
-	height: 40px;
-	bottom:0;
-	background: #6cf;
-	background:rgb(51,51,51);
-	margin-top:40px;
+	padding-top:100px;
+	padding-bottom:15px;
+}
+#result-page .favourite
+{
+	position:absolute;
+	top:2%;
+	right:5%;
+	font-size:18px;
+	background: green;
+	width:26px;
+	text-align: center;
+}
+#result-page .favourite:hover
+{
+	background:transparent;
+}
+#result-page .favourite:hover .fa-bookmark
+{
+	color:green;
+	font-size:26px;
 }

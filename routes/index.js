@@ -9,8 +9,6 @@ const ExternalIds = require("../models/externalId");
 
 
 var start;
-var successCounter = 0;
-var  errorCounter= 0;
 var trendingMovies = [];
 var theatreMovies = [];
 var upcomingMovies = [];
@@ -204,6 +202,7 @@ addToFavouriteMovie = function(id, title, img, rel){
 	Movie.create(newMovie, (err, movie)=>{
 		if(err){
 			console.log(err);
+			console.log("Movie already Exist.")
 		}else{
 			console.log("Add a New Movie");
 		}
@@ -212,6 +211,7 @@ addToFavouriteMovie = function(id, title, img, rel){
 
 getTmdb = function(req, id){
 	let url = `https://api.themoviedb.org/3/find/${id}?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9&external_source=imdb_id`;
+	console.log(url);
 	request(url, (error, response, body)=>{
 		if(!error && response.statusCode == 200){
 			let data = JSON.parse(body);
@@ -231,64 +231,58 @@ getTmdb = function(req, id){
 	});	
 }
 
-
-//  NEW ROUTE FOR FAVOURITE
-router.get('/favourite/:imdbId/:title/:release/*', middleware.isLoggedIn, (req, res)=>{	
-	let img = req.params[0];
+router.get('/favourite/*', middleware.isLoggedIn, (req, res)=>{
 	User.findById(req.user._id, (err, user)=>{
-		if(err){
-			console.log("Error Occured in Adding the items to favourites");
-			console.log(err);
-			return res.redirect('/');
-		}
-
-		let newMovie = user.favouriteMovieList.every((movieId)=>{
-			return movieId != req.params.imdbId;
-		});
-
-		if(newMovie){
-			if(isNumber(req.params.imdbId)){			//if the id is the tmdb id
-				getImdb(req, req.params.imdbId, req.params.title, img, req.params.release);
-			}else{
-				getTmdb(req, req.params.imdbId);
-				addToFavouriteMovie(req.params.imdbId, req.params.title, img, req.params.release);
-			}
-
-			user.favouriteMovieList.push(req.params.imdbId);
-			user.save();
-			console.log("Added item to favourites");
-		}else{
-			console.log("Movie already added to favourites");
-		}
-	});
-	res.redirect('back');
-});
-
-
-router.get('/favourite/*', (req, res)=>{
-	User.findById('5ed7d935ea86120fe403331a', (err, user)=>{
 		let myFav = user.favouriteMovieList.filter((id)=>{
 			return id[0] == 't';
 		});
 		let movies = [];
+		if(myFav.length == 0)
+			res.render("favourite", {movies: null, pageTitle: "Watchlist"});
 		myFav.forEach((mId, i)=>{
 			Movie.findOne({imdbId: mId}, (err, movie)=>{
 				movies.push(movie);
 				if(i == myFav.length-1){
-					res.render("favourite", {movies: movies});
+					res.render("favourite", {movies: movies, pageTitle: "Favourites"});
 				}
 			});
 		});
 	});
 });
 
-router.post('/favourite*', (req, res)=>{
-	// let imdbid = req.body.imdbId;
-	// let title = req.body.title;
-	// let releaset = req.body.release;
-	// let img = req.body.img;
-	console.log(req.body);
-	res.send("Request Accepted");
+//  NEW ROUTE FOR FAVOURITE
+router.post('/favourite', middleware.isLoggedIn, (req, res)=>{
+	let imdbId = req.body.id;
+	let title = req.body.title;
+	let release = req.body.release;
+	let img = req.body.img;
+	
+	User.findById(req.user._id, (err, user)=>{
+		if(err){
+			console.log("Error Occured in Adding the items to favourites");
+			console.log(err);
+			return res.redirect('/');
+		}
+		let newMovie = user.favouriteMovieList.every((movieId)=>{
+			return movieId != imdbId;
+		});
+		console.log(newMovie);
+		if(newMovie){
+			if(isNumber(imdbId)){			//if the id is the tmdb id
+				getImdb(req, imdbId, title, img, release);
+			}else{
+				getTmdb(req, imdbId);
+				addToFavouriteMovie(imdbId, title, img, release);
+			}
+
+			if(imdbId != null) user.favouriteMovieList.push(imdbId);
+			user.save();
+			console.log("Added item to favourites");
+		}else{
+			console.log("Movie already Exist in favourites");
+		}
+	});
+	res.redirect("back");
 });
 
 //  DELETE ROUTE FOR FAVOURITES
@@ -320,19 +314,129 @@ router.delete('/favourite/:imdbId', middleware.isLoggedIn, (req, res)=>{
 	});
 });
 
-router.get('/watchlist/:imdbId/', middleware.isLoggedIn, (req, res)=>{
-	User.findById(req.user._id, (err, user)=>{
-		if(err){
-			console.log(err);
-			return res.redirect('/');
+getImdbWatchList = function(req, id, title, img, rel){
+	let url = `https://api.themoviedb.org/3/movie/${id}/external_ids?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
+	request(url, (error, response, body)=>{
+		if(!error && response.statusCode == 200){
+			let data = JSON.parse(body);
+			imdbId = data['imdb_id'];
+			addToFavouriteMovie(imdbId, title, img, rel);
+			User.findById(req.user._id, (err, user)=>{
+				if(err){
+					console.log(err);
+				}else{
+					user.watchList.push(imdbId);
+					user.save();
+				}
+			});
 		}
-		user.watchList.push(req.params.imdbId);
-		user.save();
-		console.log("Added item to watchlist");
-		res.redirect('back');
+	});
+}
+
+getTmdbWatchList = function(req, id){
+	let url = `https://api.themoviedb.org/3/find/${id}?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9&external_source=imdb_id`;
+	console.log(url);
+	request(url, (error, response, body)=>{
+		if(!error && response.statusCode == 200){
+			let data = JSON.parse(body);
+
+			let tmdbId = data["movie_results"][0]["id"];
+			console.log("TMDB ID IS ", tmdbId);
+
+			User.findById(req.user._id, (err, user)=>{
+				if(err){
+					console.log(err);
+				}else{
+					user.watchList.push(tmdbId);
+					user.save();
+				}
+			});
+		}
+	});	
+}
+
+router.get('/watchlist/*', middleware.isLoggedIn, (req, res)=>{
+	User.findById(req.user._id, (err, user)=>{
+		let myList = user.watchList.filter((id)=>{
+			return id[0] == 't';
+		});
+		let movies = [];
+		if(myList.length == 0)
+			res.render("favourite", {movies: null, pageTitle: "Watchlist"});
+		myList.forEach((mId, i)=>{
+			Movie.findOne({imdbId: mId}, (err, movie)=>{
+				movies.push(movie);
+				if(i == myList.length-1){
+					res.render("favourite", {movies: movies, pageTitle: "Watchlist"});
+				}
+			});
+		});
 	});
 });
 
+//  NEW ROUTE FOR WATCHLIST
+router.post('/watchlist', middleware.isLoggedIn, (req, res)=>{
+	let imdbId = req.body.id;
+	let title = req.body.title;
+	let release = req.body.release;
+	let img = req.body.img;
+	
+	User.findById(req.user._id, (err, user)=>{
+		if(err){
+			console.log("Error Occured in Adding the items to watchlist");
+			console.log(err);
+			return res.redirect('/');
+		}
+		let newMovie = user.watchList.every((movieId)=>{
+			return movieId != imdbId;
+		});
+		console.log(newMovie);
+		if(newMovie){
+			if(isNumber(imdbId)){			//if the id is the tmdb id
+				getImdbWatchList(req, imdbId, title, img, release);
+			}else{
+				getTmdbWatchList(req, imdbId);
+				addToFavouriteMovie(imdbId, title, img, release);
+			}
+
+			if(imdbId != null) user.watchList.push(imdbId);
+			user.save();
+			console.log("Added item to watchlist");
+		}else{
+			console.log("Movie already Exist in watchlist");
+		}
+	});
+	res.redirect("back");
+});
+
+//  DELETE ROUTE FOR WATCHLIST
+router.delete('/watchlist/:imdbId', middleware.isLoggedIn, (req, res)=>{
+	User.findById(req.user._id, async (err, user)=>{
+		if(err){
+			console.log("Error occurred in fetching the user");
+			res.redirect("/");
+		}else{
+			let tmdbid;
+			let imdbid = req.params.imdbId;
+			try{
+				let foundContent = await ExternalIds.findOne({imdbId: req.params.imdbId});
+				tmdbid = foundContent.tmdbId;
+			}catch(err){	}
+			let i = -1, t = -1;
+			user.watchList.forEach((id, index)=>{
+				if(id == tmdbid)
+					t = index;
+				if(id == imdbid)
+					i = index;
+			});
+			if(i != -1) user.watchList.splice(i, 1);
+			if(t != -1) user.watchList.splice(t, 1);
+			console.log("Movie removed from watchlist");
+			user.save();
+			res.redirect('/favourite/');
+		}
+	});
+});
 
 router.get("/*", (req, res)=>{
 	isRender = false;

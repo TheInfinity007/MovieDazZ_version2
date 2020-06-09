@@ -25,12 +25,30 @@
 				<div class="icon-wrapper">
 					<ul class="">
 						<li class="icon">
-							<a href="/favourite/<%= data['imdbID'] %>/<%=data['Title'].split(' ').join('-')%>/<%= data['Released'] %>/<%= data['Poster']%>">
-								<i class="fa fa-heart <% if(currentUser && currentUser.favouriteMovieList.some((id)=>{ return id == data['imdbID']})){ %>active<%}%>"></i>
-							</a>
+							<form method="POST" action="/favourite">
+								<input type="hidden" name="id" value="<%= data['imdbID'] %>">
+								<input type="hidden" name="title" value="<%= data['Title']%>">
+								<input type="hidden" name="release" value="<%= data['Released']%>">
+								<input type="hidden" name="img" value="<%= data['Poster']%>">
+								<button style="background:transparent; border:0;outline: none">
+									<i class="fa fa-heart <% if(currentUser && currentUser.favouriteMovieList.some((id)=>{ return id == data['imdbID']})){ %>active<%}%>"></i>
+								</button>
+							</form>
 						</li>
-						<li class="icon"><a href="/watchlist/<%= data['imdbID'] %>"><i class="fa fa-bookmark"></i></a></li>
-						<li class="icon"><a href=""><i class="fa fa-download"></i></a></li>
+						<li class="icon">
+							<form method="POST" action="/watchlist">
+								<input type="hidden" name="id" value="<%= data['imdbID'] %>">
+								<input type="hidden" name="title" value="<%= data['Title']%>">
+								<input type="hidden" name="release" value="<%= data['Released']%>">
+								<input type="hidden" name="img" value="<%= data['Poster']%>">
+								<button style="background:transparent; border:0;outline: none">
+									<i class="fa fa-bookmark <% if(currentUser && currentUser.watchList.some((id)=>{ return id == data['imdbID']})){ %>active<%}%>"></i>
+								</button>
+							</form>
+						</li>
+						<li class="icon">
+							<a href="" style="position: relative; top:12px;"><i class="fa fa-download"></i></a>
+						</li>
 						<li class="play-trailer-wrapper">
 							<a href=""><i class="fa fa-play"></i> Play Trailer
 							</a>

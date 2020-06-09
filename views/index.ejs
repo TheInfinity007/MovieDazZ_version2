@@ -27,9 +27,18 @@
 								</a>					
 								<div class="">
 									<span class="favourite" title="Add to Favourites">
-										<a href="/favourite/<%= movie[0]%>/<%=movie[2]%>/<%=movie[3]%>/https://image.tmdb.org/t/p/original<%= movie[4]%>">
+									<!-- 	<a href="/favourite/<%= movie[0]%>/<%=movie[2]%>/<%=movie[3]%>/https://image.tmdb.org/t/p/original<%= movie[4]%>">
 											<i class="fa fa-heart <% if(currentUser && currentUser.favouriteMovieList.some((id)=>{ return id == movie[0]})){ %>active<%}%>"></i>
-										</a>
+										</a> -->
+										<form method="POST" action="/favourite">
+											<button style="background:transparent; border:0;outline: none">
+												<input type="hidden" name="id" value="<%= movie[0]%>">
+												<input type="hidden" name="title" value="<%= movie[2]%>">
+												<input type="hidden" name="release" value="<%= movie[3]%>">
+												<input type="hidden" name="img" value="https://image.tmdb.org/t/p/original<%= movie[4]%>">
+												<i class="fa fa-heart <% if(currentUser && currentUser.favouriteMovieList.some((id)=>{ return id == movie[0]})){ %>active<%}%>"></i>
+											</button>
+										</form>
 									</span>
 								</div>
 								<div class="card-content">

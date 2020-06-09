@@ -282,6 +282,15 @@ router.get('/favourite/*', (req, res)=>{
 	});
 });
 
+router.post('/favourite*', (req, res)=>{
+	// let imdbid = req.body.imdbId;
+	// let title = req.body.title;
+	// let releaset = req.body.release;
+	// let img = req.body.img;
+	console.log(req.body);
+	res.send("Request Accepted");
+});
+
 //  DELETE ROUTE FOR FAVOURITES
 router.delete('/favourite/:imdbId', middleware.isLoggedIn, (req, res)=>{
 	User.findById(req.user._id, async (err, user)=>{

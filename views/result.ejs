@@ -2,6 +2,16 @@
 
 <main id="result-page">
 	<div class="container pb-5">
+		<div class="row" style="position:relative">
+			<div class="px-3 d-flex justify-content-between w-100">
+				<%if(current !=1){%>
+					<button class="btn btn-primary my-3 " onclick="window.location.href='/search/movie/<% if(search){%><%=search%>/<%= Number(current)-1 %>/<% } %>'" style="vertical-align: initial;">Previous</button>
+				<%}%>
+				<%if(current < pages){%>
+						<button style="vertical-align: initial;margin:auto 0 auto auto" onclick="window.location.href='/search/movie/<% if(search){%><%=search%>/<%= Number(current) + 1 %>/<% } %>'" class="btn btn-primary my-3 float-right">Next</button>
+				<%}%>
+			</div>
+		</div>
 		<div class="row">
 			
 			<% data["Search"].forEach((movie)=>{ %>
@@ -17,7 +27,7 @@
 							</div>
 							<div class="">
 								<span class="favourite" title="Add to WatchList">
-									<form method="POST" action="/favourite">
+									<form method="POST" action="/watchlist">
 										<input type="hidden" name="id" value="<%= movie['imdbID']%>">
 										<input type="hidden" name="title" value="<%= movie['Title'] %>">
 										<input type="hidden" name="release" value="<%= movie['Year'] %>">

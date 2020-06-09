@@ -142,6 +142,7 @@ router.get('/i/:imdb_id/*', (req, res)=>{
 
 // TO GET THE DETAILS ABOUT A MOVIE IN HOME PAGE MOVIES CATEGORIES PAGE
 router.get('/:movie_id/*', async (req, res)=>{
+	console.log("Movie get Route");
 	start = new Date().getTime();
 	let movieId = req.params.movie_id.substr(0, req.params.movie_id.indexOf('-'));
 	let imdbId;

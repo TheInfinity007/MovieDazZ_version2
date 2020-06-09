@@ -216,17 +216,19 @@ getTmdb = function(req, id){
 		if(!error && response.statusCode == 200){
 			let data = JSON.parse(body);
 
-			let tmdbId = data["movie_results"][0]["id"];
-			console.log("TMDB ID IS ", tmdbId);
+			if(data["movie_results"].length > 0){
+				let tmdbId = data["movie_results"][0]["id"];
+				console.log("TMDB ID IS ", tmdbId);
 
-			User.findById(req.user._id, (err, user)=>{
-				if(err){
-					console.log(err);
-				}else{
-					user.favouriteMovieList.push(tmdbId);
-					user.save();
-				}
-			});
+				User.findById(req.user._id, (err, user)=>{
+					if(err){
+						console.log(err);
+					}else{
+						user.favouriteMovieList.push(tmdbId);
+						user.save();
+					}
+				});
+			}
 		}
 	});	
 }
@@ -309,7 +311,7 @@ router.delete('/favourite/:imdbId', middleware.isLoggedIn, (req, res)=>{
 			if(t != -1) user.favouriteMovieList.splice(t, 1);
 			console.log("Movie removed from favourites");
 			user.save();
-			res.redirect('/favourite/');
+			res.redirect('back/');
 		}
 	});
 });
@@ -340,17 +342,19 @@ getTmdbWatchList = function(req, id){
 		if(!error && response.statusCode == 200){
 			let data = JSON.parse(body);
 
-			let tmdbId = data["movie_results"][0]["id"];
-			console.log("TMDB ID IS ", tmdbId);
+			if(data["movie_results"].length > 0){
+				let tmdbId = data["movie_results"][0]["id"];
+				console.log("TMDB ID IS ", tmdbId);
 
-			User.findById(req.user._id, (err, user)=>{
-				if(err){
-					console.log(err);
-				}else{
-					user.watchList.push(tmdbId);
-					user.save();
-				}
-			});
+				User.findById(req.user._id, (err, user)=>{
+					if(err){
+						console.log(err);
+					}else{
+						user.watchList.push(tmdbId);
+						user.save();
+					}
+				});	
+			}
 		}
 	});	
 }
@@ -433,7 +437,7 @@ router.delete('/watchlist/:imdbId', middleware.isLoggedIn, (req, res)=>{
 			if(t != -1) user.watchList.splice(t, 1);
 			console.log("Movie removed from watchlist");
 			user.save();
-			res.redirect('/favourite/');
+			res.redirect('back');
 		}
 	});
 });

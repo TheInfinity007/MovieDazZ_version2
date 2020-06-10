@@ -26,17 +26,27 @@
 								</p>
 							</div>
 							<div class="">
-								<span class="favourite" title="Add to WatchList">
-									<form method="POST" action="/watchlist">
-										<input type="hidden" name="id" value="<%= movie['imdbID']%>">
-										<input type="hidden" name="title" value="<%= movie['Title'] %>">
-										<input type="hidden" name="release" value="<%= movie['Year'] %>">
-										<input type="hidden" name="img" value="<%= movie['Poster'] %>">
-										<button style="background:transparent; border:0;outline: none">
-											<i class="fa fa-bookmark"></i>
-										</button>
-									</form>
-								</span>
+								<% if(currentUser && currentUser.watchList.some((id)=>{ return id == movie['imdbID']})){ %>
+									<span class="favourite active" title="Remove From WatchList">
+										<form method="POST" action="/watchlist/<%= movie['imdbID'] %>?_method=DELETE">
+											<button style="background:transparent; border:0;outline: none">
+												<i class="fa fa-bookmark active"></i>
+											</button>
+										</form>
+									</span>
+								<%}else{%>
+									<span class="favourite" title="Add to WatchList">
+										<form method="POST" action="/watchlist">
+											<input type="hidden" name="id" value="<%= movie['imdbID']%>">
+											<input type="hidden" name="title" value="<%= movie['Title'] %>">
+											<input type="hidden" name="release" value="<%= movie['Year'] %>">
+											<input type="hidden" name="img" value="<%= movie['Poster'] %>">
+											<button style="background:transparent; border:0;outline: none">
+												<i class="fa fa-bookmark"></i>
+											</button>
+										</form>
+									</span>
+								<% } %>
 							</div>
 						</div>
 					</div>

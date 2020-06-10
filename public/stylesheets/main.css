@@ -211,11 +211,13 @@ a.page-link
 	width:26px;
 	text-align: center;
 }
-#result-page .favourite:hover
+#result-page .favourite:hover,
+#result-page .favourite.active
 {
 	background:transparent;
 }
-#result-page .favourite:hover .fa-bookmark
+#result-page .favourite:hover .fa-bookmark,
+#result-page .favourite .fa-bookmark.active
 {
 	color:green;
 	font-size:26px;

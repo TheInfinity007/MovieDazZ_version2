@@ -26,17 +26,27 @@
 									</div>			
 								</a>					
 								<div class="">
-									<span class="favourite" title="Add to Favourites">
-										<form method="POST" action="/favourite">
-											<input type="hidden" name="id" value="<%= movie[0]%>">
-											<input type="hidden" name="title" value="<%= movie[2]%>">
-											<input type="hidden" name="release" value="<%= movie[3]%>">
-											<input type="hidden" name="img" value="https://image.tmdb.org/t/p/original<%= movie[4]%>">
-											<button style="background:transparent; border:0;outline: none">
-												<i class="fa fa-heart <% if(currentUser && currentUser.favouriteMovieList.some((id)=>{ return id == movie[0]})){ %>active<%}%>"></i>
-											</button>
-										</form>
-									</span>
+									<% if(currentUser && currentUser.favouriteMovieList.some((id)=>{ return id == movie[0]})){ %>
+										<span class="favourite" title="Remove From Favourite">
+											<form method="POST" action="/favourite/<%= movie[0] %>?_method=DELETE">
+												<button style="background:transparent; border:0;outline: none">
+													<i class="fa fa-heart active"></i>
+												</button>
+											</form>
+										</span>
+									<%}else{%>
+										<span class="favourite" title="Add to Favourite">
+											<form method="POST" action="/favourite">
+												<input type="hidden" name="id" value="<%= movie[0]%>">
+												<input type="hidden" name="title" value="<%= movie[2]%>">
+												<input type="hidden" name="release" value="<%= movie[3]%>">
+												<input type="hidden" name="img" value="https://image.tmdb.org/t/p/original<%= movie[4]%>">
+												<button style="background:transparent; border:0;outline: none">
+													<i class="fa fa-heart"></i>
+												</button>
+											</form>
+										</spsn>
+									<% }%>
 								</div>
 								<div class="card-content">
 									<h5 title="<%=movie[2]%>"><% if(movie[2].length > 20){%><%= movie[2].slice(0, 17)%>...<%}else{%><%= movie[2]%><%}%></h5>
@@ -63,17 +73,27 @@
 									</div>
 								</a>
 								<div class="">
-									<span class="favourite" title="Add to Favourites">
-										<form method="POST" action="/favourite">
-											<input type="hidden" name="id" value="<%= movie[0]%>">
-											<input type="hidden" name="title" value="<%= movie[2]%>">
-											<input type="hidden" name="release" value="<%= movie[3]%>">
-											<input type="hidden" name="img" value="https://image.tmdb.org/t/p/original<%= movie[4]%>">
-											<button style="background:transparent; border:0;outline: none">
-												<i class="fa fa-heart <% if(currentUser && currentUser.favouriteMovieList.some((id)=>{ return id == movie[0]})){ %>active<%}%>"></i>
-											</button>
-										</form>
-									</span>
+									<% if(currentUser && currentUser.favouriteMovieList.some((id)=>{ return id == movie[0]})){ %>
+										<span class="favourite" title="Remove From Favourite">
+											<form method="POST" action="/favourite/<%= movie[0] %>?_method=DELETE">
+												<button style="background:transparent; border:0;outline: none">
+													<i class="fa fa-heart active"></i>
+												</button>
+											</form>
+										</span>
+									<%}else{%>
+										<span class="favourite" title="Add to Favourite">
+											<form method="POST" action="/favourite">
+												<input type="hidden" name="id" value="<%= movie[0]%>">
+												<input type="hidden" name="title" value="<%= movie[2]%>">
+												<input type="hidden" name="release" value="<%= movie[3]%>">
+												<input type="hidden" name="img" value="https://image.tmdb.org/t/p/original<%= movie[4]%>">
+												<button style="background:transparent; border:0;outline: none">
+													<i class="fa fa-heart"></i>
+												</button>
+											</form>
+										</spsn>
+									<% }%>
 								</div>	
 								<div class="card-content">
 									<h5 title="<%=movie[2]%>"><% if(movie[2].length > 20){%><%= movie[2].slice(0, 17)%>...<%}else{%><%= movie[2]%><%}%></h5>
@@ -100,17 +120,27 @@
 									</div>
 								</a>
 								<div class="">
-									<span class="favourite" title="Add to Favourites">
-										<form method="POST" action="/favourite">
-											<input type="hidden" name="id" value="<%= movie[0]%>">
-											<input type="hidden" name="title" value="<%= movie[2]%>">
-											<input type="hidden" name="release" value="<%= movie[3]%>">
-											<input type="hidden" name="img" value="https://image.tmdb.org/t/p/original<%= movie[4]%>">
-											<button style="background:transparent; border:0;outline: none">
-												<i class="fa fa-heart <% if(currentUser && currentUser.favouriteMovieList.some((id)=>{ return id == movie[0]})){ %>active<%}%>"></i>
-											</button>
-										</form>
-									</span>
+									<% if(currentUser && currentUser.favouriteMovieList.some((id)=>{ return id == movie[0]})){ %>
+										<span class="favourite" title="Remove From Favourite">
+											<form method="POST" action="/favourite/<%= movie[0] %>?_method=DELETE">
+												<button style="background:transparent; border:0;outline: none">
+													<i class="fa fa-heart active"></i>
+												</button>
+											</form>
+										</span>
+									<%}else{%>
+										<span class="favourite" title="Add to Favourite">
+											<form method="POST" action="/favourite">
+												<input type="hidden" name="id" value="<%= movie[0]%>">
+												<input type="hidden" name="title" value="<%= movie[2]%>">
+												<input type="hidden" name="release" value="<%= movie[3]%>">
+												<input type="hidden" name="img" value="https://image.tmdb.org/t/p/original<%= movie[4]%>">
+												<button style="background:transparent; border:0;outline: none">
+													<i class="fa fa-heart"></i>
+												</button>
+											</form>
+										</spsn>
+									<% }%>
 								</div>
 								<div class="card-content">
 									<h5 title="<%=movie[2]%>"><% if(movie[2].length > 20){%><%= movie[2].slice(0, 17)%>...<%}else{%><%= movie[2]%><%}%></h5>

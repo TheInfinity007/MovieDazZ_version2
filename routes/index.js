@@ -240,7 +240,7 @@ router.get('/favourite/*', middleware.isLoggedIn, (req, res)=>{
 		});
 		let movies = [];
 		if(myFav.length == 0)
-			res.render("favourite", {movies: null, pageTitle: "Watchlist"});
+			res.render("favourite", {movies: null, pageTitle: "Favourites"});
 		myFav.forEach((mId, i)=>{
 			Movie.findOne({imdbId: mId}, (err, movie)=>{
 				movies.push(movie);
@@ -283,23 +283,34 @@ router.post('/favourite', middleware.isLoggedIn, (req, res)=>{
 		}else{
 			console.log("Movie already Exist in favourites");
 		}
+		res.redirect("back");
 	});
-	res.redirect("back");
 });
 
 //  DELETE ROUTE FOR FAVOURITES
 router.delete('/favourite/:imdbId', middleware.isLoggedIn, (req, res)=>{
-	User.findById(req.user._id, async (err, user)=>{
+	let id = req.params.imdbId;
+	let tmdbid;
+	let imdbid;
+	User.findById(req.user._id, async(err, user)=>{
 		if(err){
 			console.log("Error occurred in fetching the user");
-			res.redirect("/");
+			res.redirect('/');
 		}else{
-			let tmdbid;
-			let imdbid = req.params.imdbId;
-			try{
-				let foundContent = await ExternalIds.findOne({imdbId: req.params.imdbId});
-				tmdbid = foundContent.tmdbId;
-			}catch(err){	}
+			if(isNumber(id)){		//if the id is the tmdb id
+				try{
+					tmdbid = id;
+					let foundContent = await ExternalIds.findOne({tmdbId: id});
+					imdbid = foundContent.imdbId;
+				}catch(err){}
+			}else{							//if id is imdb id
+				try{
+					imdbid = id;
+					let foundContent = await ExternalIds.findOne({imdbId: id});
+					tmdbid = foundContent.tmdbId;
+				}catch(err){}
+			}
+			console.log(imdbid, tmdbid);
 			let i = -1, t = -1;
 			user.favouriteMovieList.forEach((id, index)=>{
 				if(id == tmdbid)
@@ -307,11 +318,16 @@ router.delete('/favourite/:imdbId', middleware.isLoggedIn, (req, res)=>{
 				if(id == imdbid)
 					i = index;
 			});
-			if(i != -1) user.favouriteMovieList.splice(i, 1);
-			if(t != -1) user.favouriteMovieList.splice(t, 1);
+			if(i > t){
+				if(i != -1) user.favouriteMovieList.splice(i, 1);
+				if(t != -1) user.favouriteMovieList.splice(t, 1);
+			}else{
+				if(t != -1) user.favouriteMovieList.splice(t, 1);
+				if(i != -1) user.favouriteMovieList.splice(i, 1);
+			}
 			console.log("Movie removed from favourites");
 			user.save();
-			res.redirect('back/');
+			res.redirect('back');
 		}
 	});
 });
@@ -433,8 +449,14 @@ router.delete('/watchlist/:imdbId', middleware.isLoggedIn, (req, res)=>{
 				if(id == imdbid)
 					i = index;
 			});
-			if(i != -1) user.watchList.splice(i, 1);
-			if(t != -1) user.watchList.splice(t, 1);
+
+			if(i > t){						//higher index movie id should be removed first
+				if(i != -1) user.watchList.splice(i, 1);
+				if(t != -1) user.watchList.splice(t, 1);
+			}else{
+				if(t != -1) user.watchList.splice(t, 1);
+				if(i != -1) user.watchList.splice(i, 1);
+			}
 			console.log("Movie removed from watchlist");
 			user.save();
 			res.redirect('back');

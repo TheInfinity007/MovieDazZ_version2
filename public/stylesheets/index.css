@@ -410,5 +410,47 @@ section.landing:before
 {
 		box-shadow: 0 2px 8px rgba(128, 0, 128, 0.92), 0 5px 16px rgba(128, 0, 128, 0.5), 0 5px 18px rgba(128,0,128,0.1);
 }
-
-
+#download-page
+{
+	min-height: 92.3vh;
+}
+#download-page h1.title
+{
+	font-size:4rem;
+	text-decoration: underline;
+}
+.d-title
+{
+	font-size:3rem;
+}
+.d-quality
+{
+	font-size:3rem;
+}
+.quality-type
+{
+	font-size:2rem;
+	text-transform: uppercase;
+}
+.btn-download
+{
+	background:#fff;
+	border:3px solid purple;
+	color:purple;
+	outline: none;
+	border-top-right-radius:30px;
+	border-bottom-left-radius:30px;
+}
+.btn-download:hover
+{
+	background:purple;
+	color:#fff;
+}
+.btn-download .fa-download:hover
+{
+	color:inherit;
+}
+.btn-download.btn:focus
+{
+	box-shadow: none;
+}

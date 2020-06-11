@@ -464,6 +464,27 @@ router.delete('/watchlist/:imdbId', middleware.isLoggedIn, (req, res)=>{
 	});
 });
 
+router.get("/download/:imdbId/", (req, res)=>{
+	let url = `https://yts.mx/api/v2/list_movies.json?query_term=${req.params.imdbId}`;
+	console.log(url);
+	request(url, (error, response, body)=>{
+		if(!error && response.statusCode == 200){
+			let data = JSON.parse(body);
+			if(data['data']['movie_count'] != 0){
+				data = data['data']['movies'][0];
+				let img = data['small_cover_image'];
+				let title = data['title'];
+				console.log(data['torrents']);
+				res.render('download', {img: img, data: data['torrents'], title: title});
+				// return res.send(data);
+			}
+			else
+				return res.send("DATA NOT FOUND");
+		}
+	});
+	// res.render('download');
+})
+
 router.get("/*", (req, res)=>{
 	isRender = false;
 	trendingMovies = [];

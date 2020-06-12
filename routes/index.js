@@ -12,14 +12,15 @@ var start;
 var trendingMovies = [];
 var theatreMovies = [];
 var upcomingMovies = [];
+var popularMovies = [];
 var isRender = false;
 
 checkMovies = function(res){
 	if(isRender == false){
-		if(trendingMovies.length > 0 && theatreMovies.length > 0 && upcomingMovies.length > 0){
+		if(trendingMovies.length > 0 && theatreMovies.length > 0 && upcomingMovies.length > 0 && popularMovies.length > 0){
 			console.log(new  Date().getTime() - start);
 			isRender = true;
-			res.render("index", {trendingMovies: trendingMovies, theatreMovies: theatreMovies, upcomingMovies: upcomingMovies});
+			res.render("index", {trendingMovies: trendingMovies, theatreMovies: theatreMovies, upcomingMovies: upcomingMovies, popularMovies: popularMovies});
 		}
 	}
 }
@@ -96,6 +97,31 @@ grabUpcomingMovies = function(res){
 				checkMovies(res);	
 			}else{
 				console.log("Exit 3");
+				grabUpcomingMovies(res);
+			}
+		});
+	}
+}
+grabPopularMovies = function(res){
+	if(popularMovies.length < 1){
+		let url = "https://api.themoviedb.org/3/movie/popular?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9"
+		request(url, (error, response, body)=>{
+			if(!error && response.statusCode == 200){
+				let data = JSON.parse(body);
+				data["results"].forEach((result)=>{
+					if(result["poster_path"] === null) return;
+					let temp = [];
+					temp.push(result["id"]);
+					temp.push(result["vote_average"]);
+					temp.push(result["title"]);
+					temp.push(result["release_date"]);
+					temp.push(result["poster_path"]);
+					popularMovies.push(temp);
+				});
+				console.log("Grab4");
+				checkMovies(res);	
+			}else{
+				console.log("Exit 4");
 				grabUpcomingMovies(res);
 			}
 		});
@@ -466,7 +492,6 @@ router.delete('/watchlist/:imdbId', middleware.isLoggedIn, (req, res)=>{
 
 router.get("/download/:imdbId/", (req, res)=>{
 	let url = `https://yts.mx/api/v2/list_movies.json?query_term=${req.params.imdbId}`;
-	console.log(url);
 	request(url, (error, response, body)=>{
 		if(!error && response.statusCode == 200){
 			let data = JSON.parse(body);
@@ -474,15 +499,18 @@ router.get("/download/:imdbId/", (req, res)=>{
 				data = data['data']['movies'][0];
 				let img = data['small_cover_image'];
 				let title = data['title'];
-				console.log(data['torrents']);
 				res.render('download', {img: img, data: data['torrents'], title: title});
-				// return res.send(data);
 			}
-			else
-				return res.send("DATA NOT FOUND");
+			else{
+				res.render('download', {img: 'https://source.unsplash.com/random/1600×1600/?movies', data: null, title: null});
+				console.log("Download is not available.");
+			}
+		}else{
+			if(error)console.log("Error in Fetching the download-link = ", error);
+			if(response){console.log("Status Code in Fetching the downloa link = ", response.statusCode);}
+			res.redirect('back');
 		}
 	});
-	// res.render('download');
 })
 
 router.get("/*", (req, res)=>{
@@ -490,10 +518,13 @@ router.get("/*", (req, res)=>{
 	trendingMovies = [];
 	theatreMovies = [];
 	upcomingMovies = [];
+	popularMovies = [];
 	start = new Date().getTime();
 	grabTrendingMovies(res);
 	grabTheatreMovies(res);
 	grabUpcomingMovies(res);
+	grabPopularMovies(res);
+
 });
 
 module.exports = router;

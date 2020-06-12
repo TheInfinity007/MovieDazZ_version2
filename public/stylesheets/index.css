@@ -200,6 +200,27 @@ section.landing:before
 	padding-bottom:5px;
 	border-bottom: 1px solid rgba(0,0,0,0.5);
 }
+.m-trending .header h3 span
+{
+	font-weight: normal;
+	font-size:20px;
+	border:3px solid purple;
+	color:purple;
+	padding:5px 8px;
+	border-radius: 20px;
+	border-bottom-right-radius: 0;
+	border-top-left-radius: 0;
+}
+.m-trending .header h3 span:hover
+{
+	background:purple;
+	color:#fff;
+}
+.m-trending .header h3 span a
+{
+	color:inherit;
+	text-decoration: none;
+}
 .cards-wrapper
 {
 	overflow-x: scroll;
@@ -379,7 +400,8 @@ section.landing:before
 	background: purple;
 	border-color:purple;
 }
-.form-wrapper form .btn-primary:focus
+.form-wrapper form .btn-primary:focus,
+.form-wrapper form .btn-primary:active
 {	
 	box-shadow: 0 0 0 0.2rem rgb(106, 9, 106);
 }
@@ -387,11 +409,31 @@ section.landing:before
 {
 	box-shadow: 0 0 0 0.1rem rgba(106, 9, 106, 1);
 }
+.btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
+	background:purple;
+	color:inherit;
+	border-color:purple;
+}
 #login-page a,
 #register-page a
 {
 	color:#d255d2;
 	text-decoration: none;
+}
+#login-page .back,
+#register-page .back
+{
+	border:2px solid #d255d2;
+	/*border:2px solid purple;*/
+	padding:5px 8px;
+	border-radius: 5px;
+}
+#login-page .back:hover,
+#register-page .back:hover
+{
+	background:purple;
+	border-color:purple;
+	color:#fff;
 }
 #register-page #pwd-error
 {
@@ -423,11 +465,18 @@ section.landing:before
 {
 	font-size:3rem;
 }
-.d-quality
+.d-link
+{
+	background:rgba(0,0,0,0.5);
+	padding:10px 0;
+	border-radius: 15px;
+}
+.d-quality span
 {
 	font-size:3rem;
+	display: inline-block;	
 }
-.quality-type
+.quality-type span
 {
 	font-size:2rem;
 	text-transform: uppercase;

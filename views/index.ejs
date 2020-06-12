@@ -11,10 +11,10 @@
 		<div class="container-fluid">
 			<section class="m-trending mt-3">
 				<div class="header">
-					<h3>Trending</h3>
+					<h3 style="">Trending<span class="pull-right"><a href="/movie/trending/">View All</a></span></h3>
+					
 					<div class="hr"></div>
 				</div>
-
 
 				<div class="cards-wrapper">
 					<div class="movie-cards">	
@@ -59,7 +59,54 @@
 			</section>
 			<section class="m-trending mt-3">
 				<div class="header">
-					<h3>In Theatres</h3>
+					<h3>Popular Downloads<span class="pull-right"><a href="/movie/">View All</a></span></h3>
+					<div class="hr"></div>
+				</div>
+				
+				<div class="cards-wrapper">
+					<div class="movie-cards">	
+						<% popularMovies.forEach((movie)=>{ %>
+							<div class="movie-card">
+								<a href="/movie/<%= movie[0]%>-<%=movie[2].split(' ').join('-')%>/">
+									<div class="img">
+										<img src="https://image.tmdb.org/t/p/original<%= movie[4]%>" class="">	
+									</div>			
+								</a>					
+								<div class="">
+									<% if(currentUser && currentUser.favouriteMovieList.some((id)=>{ return id == movie[0]})){ %>
+										<span class="favourite" title="Remove From Favourite">
+											<form method="POST" action="/favourite/<%= movie[0] %>?_method=DELETE">
+												<button style="background:transparent; border:0;outline: none">
+													<i class="fa fa-heart active"></i>
+												</button>
+											</form>
+										</span>
+									<%}else{%>
+										<span class="favourite" title="Add to Favourite">
+											<form method="POST" action="/favourite">
+												<input type="hidden" name="id" value="<%= movie[0]%>">
+												<input type="hidden" name="title" value="<%= movie[2]%>">
+												<input type="hidden" name="release" value="<%= movie[3]%>">
+												<input type="hidden" name="img" value="https://image.tmdb.org/t/p/original<%= movie[4]%>">
+												<button style="background:transparent; border:0;outline: none">
+													<i class="fa fa-heart"></i>
+												</button>
+											</form>
+										</spsn>
+									<% }%>
+								</div>
+								<div class="card-content">
+									<h5 title="<%=movie[2]%>"><% if(movie[2].length > 20){%><%= movie[2].slice(0, 17)%>...<%}else{%><%= movie[2]%><%}%></h5>
+									<div class="card-release"><%=movie[3]%></div>
+								</div>
+							</div>
+						<% }); %>
+					</div>
+				</div>			
+			</section>
+			<section class="m-trending mt-3">
+				<div class="header">
+					<h3>In Theatres<span class="pull-right"><a href="/movie/in-theatre/">View All</a></span></h3>
 					<div class="hr"></div>
 				</div>
 
@@ -106,7 +153,7 @@
 			</section>
 			<section class="m-trending mt-3">
 				<div class="header">
-					<h3>Upcoming</h3>
+					<h3>Upcoming<span class="pull-right"><a href="/movie/upcoming/">View All</a></span></h3>
 					<div class="hr"></div>
 				</div>
 

@@ -5,31 +5,39 @@
 
 	<div class="container-fluid p-md-5" id="download-page">
 
+		<% if(title){ %>
 		<div class="row text-center p-md-3">				
 			<div class=" mb-1 mx-auto">
-				<h1 class="title mb-5"><%= title %> Full Movie Download</h1>
+				<h1 class="title mb-5"><%= title %> Full Movie Download</h1> 
 				<div class="d-title">Select Movie Quality</div>
 			</div>
 		</div>
 		<div class="row download-wrapper text-center d-flex justify-content-center">
 			<% data.forEach((link)=>{ %>
-
-				<div class="col-md-4 d-link">
-					<div class="d-quality"><span><%= link['quality'] %></span></div>
-					<div class="quality-type">
-						<span><%= link['type'] %></span>
+				<div class="col-md-4 mb-3">
+					<div class="d-link">
+						<div class="d-quality p-0 m-0"><span><%= link['quality'] %></span></div>
+						<div class="quality-type">
+							<span><%= link['type'] %></span>
+						</div>
+						<div class="quality-size">
+							<p>File Size: <%= link['size'] %></p>
+						</div>
+						<a href="<%= link['url'] %>" class="btn btn-download btn-lg" title="Download <%= title %> <%= link['quality'] %> Torrent">
+							<span><i class="fa fa-download"></i> Download</span>
+						</a>
 					</div>
-					<div class="quality-size">
-						<p>File Size: <%= link['size'] %></p>
-					</div>
-					<a href="<%= link['url'] %>" class="btn btn-download btn-lg" title="Download <%= title %> <%= link['quality'] %> Torrent">
-						<span><i class="fa fa-download"></i> Download</span>
-					</a>
-				</div>
-
-				
+				</div>				
 			<% }) %>
 		</div>
+		<% }else{ %>
+		<div class="row text-center p-md-3">				
+			<div class=" mb-1 mx-auto">
+				<h1 class="title text-decoration-none">Sorry! </h1>
+				<h2 class="title mb-5 text-decoration-none">Download is not available for this movie. Try again later!</h2> 
+			</div>
+		</div>
+		<% } %>
 	</div>
 
 </main>

@@ -11,6 +11,7 @@ const User = require('./models/user');
 //requiring routes
 var indexRoute = require('./routes/index');
 var movieRoute = require('./routes/movie');
+var celebrityRoute = require('./routes/celebrity');
 
 var url = process.env.DATABASEURL || "mongodb://localhost/moviedazz";
 mongoose.set('useUnifiedTopology', true);
@@ -44,6 +45,7 @@ app.use((req, res, next)=>{
 });
 
 app.use("/movie", movieRoute);
+app.use('/celebrity', celebrityRoute);
 app.use('/', indexRoute);
 
 app.listen(process.env.PORT || 3000, ()=>{

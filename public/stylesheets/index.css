@@ -191,6 +191,7 @@ section.landing:before
 	box-shadow: 5px 8px 8px rgba(0,0,0,0.5);
 	padding:20px 50px 20px;
 }
+
 .m-trending .header
 {
 	padding:20px 0;
@@ -211,6 +212,23 @@ section.landing:before
 	border-radius: 20px;
 	border-bottom-right-radius: 0;
 	border-top-left-radius: 0;
+}
+@media(max-width: 768px)
+{
+	.m-trending
+	{
+		padding:20px 0;
+	}
+	.m-trending .header h3
+	{
+		font-size:20px;
+		padding:0 0 0 10px ;
+	}
+	.m-trending .header h3 span
+	{
+		font-size:12px;
+		padding: 2px 4px;
+	}
 }
 .m-trending .header h3 span:hover
 {

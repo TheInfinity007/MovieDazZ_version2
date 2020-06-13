@@ -133,11 +133,30 @@ router.get('/search/:type/:title/:pageNo/*', (req, res)=>{
 	request(url, (error, response, body)=>{
 		if(!error && response.statusCode == 200){
 			var data = JSON.parse(body);
+			if(data.Response == "True"){
+				res.render("result", {
+					data: data,
+					search: req.params.title,
+					current: req.params.pageNo,
+					pages: Math.ceil(data["totalResults"]/10),
+					error: null
+				});
+			}else{
+				res.render("result", {
+					data: null,
+					search: req.params.title,
+					current: req.params.pageNo,
+					pages: null,
+					error: data.Error,
+				});
+			}
+		}else{
 			res.render("result", {
-				data: data,
+				data: null,
 				search: req.params.title,
 				current: req.params.pageNo,
-				pages: Math.ceil(data["totalResults"]/10)
+				pages: null,
+				error: "Network Busy",
 			});
 		}
 	})
@@ -524,7 +543,10 @@ router.get("/*", (req, res)=>{
 	grabTheatreMovies(res);
 	grabUpcomingMovies(res);
 	grabPopularMovies(res);
+});
 
+router.post('/*', (req, res)=>{
+	res.status(502).send({error: "Please change your method, use get method"});
 });
 
 module.exports = router;

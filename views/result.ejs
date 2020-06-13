@@ -3,6 +3,9 @@
 <main id="result-page">
 	<div class="container pb-5">
 		<div class="row" style="position:relative">
+			<div class="px-5 text-center mx-auto">
+				<h1 class="text-white text-center m-0">Your Search Results for <span class="text-capitalize"><%= search %></span></h1>
+			</div>
 			<div class="px-3 d-flex justify-content-between w-100">
 				<%if(current !=1){%>
 					<button class="btn my-3 btn-nav" onclick="window.location.href='/search/movie/<% if(search){%><%=search%>/<%= Number(current)-1 %>/<% } %>'" style="vertical-align: initial;">Previous</button>
@@ -13,47 +16,53 @@
 			</div>
 		</div>
 		<div class="row">
-			
-			<% data["Search"].forEach((movie)=>{ %>
-				<%if(movie['Poster'] != 'N/A'){%>		
-					<div class="col-md-6 col-lg-3">
-						<div class="card">
-							<a href="/movie/i/<%= movie['imdbID']%>/">
-								<img class="card-img-top" src="<%if(movie['Poster'] == 'N/A'){%>https://res.cloudinary.com/infinity99/image/upload/v1586284960/movieSearchApp/pikachu_zwpedv.jpg<%}else{%><%= movie['Poster'] %><%}%>" alt="<%= movie['Title'] %>.jpg">
-							</a>
-							<div class="card-body text-dark">
-								<h4 class="title"><%= movie['Title'] %> <span class="year"><h5>(<%= movie['Year'] %>)</h5></span></h4>
-								<p>
-									<a href="/movie/i/<%= movie['imdbID']%>/" class = "btn btn-primary btn-sm"> More Info</a>
-								</p>
-							</div>
-							<div class="">
-								<% if(currentUser && currentUser.watchList.some((id)=>{ return id == movie['imdbID']})){ %>
-									<span class="favourite active" title="Remove From WatchList">
-										<form method="POST" action="/watchlist/<%= movie['imdbID'] %>?_method=DELETE">
-											<button style="background:transparent; border:0;outline: none">
-												<i class="fa fa-bookmark active"></i>
-											</button>
-										</form>
-									</span>
-								<%}else{%>
-									<span class="favourite" title="Add to WatchList">
-										<form method="POST" action="/watchlist">
-											<input type="hidden" name="id" value="<%= movie['imdbID']%>">
-											<input type="hidden" name="title" value="<%= movie['Title'] %>">
-											<input type="hidden" name="release" value="<%= movie['Year'] %>">
-											<input type="hidden" name="img" value="<%= movie['Poster'] %>">
-											<button style="background:transparent; border:0;outline: none">
-												<i class="fa fa-bookmark"></i>
-											</button>
-										</form>
-									</span>
-								<% } %>
+			<% if(!error && data){ %>
+				<% data["Search"].forEach((movie)=>{ %>
+					<%if(movie['Poster'] != 'N/A'){%>		
+						<div class="col-md-6 col-lg-3">
+							<div class="card">
+								<a href="/movie/i/<%= movie['imdbID']%>/">
+									<img class="card-img-top" src="<%if(movie['Poster'] == 'N/A'){%>https://res.cloudinary.com/infinity99/image/upload/v1586284960/movieSearchApp/pikachu_zwpedv.jpg<%}else{%><%= movie['Poster'] %><%}%>" alt="<%= movie['Title'] %>.jpg">
+								</a>
+								<div class="card-body text-dark">
+									<h4 class="title"><%= movie['Title'] %> <span class="year"><h5>(<%= movie['Year'] %>)</h5></span></h4>
+									<p>
+										<a href="/movie/i/<%= movie['imdbID']%>/" class = "btn btn-primary btn-sm"> More Info</a>
+									</p>
+								</div>
+								<div class="">
+									<% if(currentUser && currentUser.watchList.some((id)=>{ return id == movie['imdbID']})){ %>
+										<span class="favourite active" title="Remove From WatchList">
+											<form method="POST" action="/watchlist/<%= movie['imdbID'] %>?_method=DELETE">
+												<button style="background:transparent; border:0;outline: none">
+													<i class="fa fa-bookmark active"></i>
+												</button>
+											</form>
+										</span>
+									<%}else{%>
+										<span class="favourite" title="Add to WatchList">
+											<form method="POST" action="/watchlist">
+												<input type="hidden" name="id" value="<%= movie['imdbID']%>">
+												<input type="hidden" name="title" value="<%= movie['Title'] %>">
+												<input type="hidden" name="release" value="<%= movie['Year'] %>">
+												<input type="hidden" name="img" value="<%= movie['Poster'] %>">
+												<button style="background:transparent; border:0;outline: none">
+													<i class="fa fa-bookmark"></i>
+												</button>
+											</form>
+										</span>
+									<% } %>
+								</div>
 							</div>
 						</div>
-					</div>
-				<%}%>
-			<% }) %>
+					<%}%>
+				<% }) %>
+			<% }else{ %>
+				<div class="text-white mx-auto">
+					<h2 class="mx-auto mt-5 text-center"><%= error %></h2>
+					<h4 class="mx-auto text-center">Please try again !</h4>
+				</div>
+			<% } %>
 		</div>
 
 

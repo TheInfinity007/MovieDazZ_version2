@@ -8,14 +8,14 @@
 			</div>
 			<div class="px-3 d-flex justify-content-between w-100">
 				<%if(current !=1){%>
-					<button class="btn my-3 btn-nav" onclick="window.location.href='/search/movie/<% if(search){%><%=search%>/<%= Number(current)-1 %>/<% } %>'" style="vertical-align: initial;">Previous</button>
+					<button class="btn mt-3 btn-nav" onclick="window.location.href='/search/movie/<% if(search){%><%=search%>/<%= Number(current)-1 %>/<% } %>'" style="vertical-align: initial;">Previous</button>
 				<%}%>
 				<%if(current < pages){%>
-						<button style="vertical-align: initial;margin:auto 0 auto auto" onclick="window.location.href='/search/movie/<% if(search){%><%=search%>/<%= Number(current) + 1 %>/<% } %>'" class="btn my-3 float-right btn-nav">Next</button>
+						<button style="vertical-align: initial;margin:auto 0 auto auto" onclick="window.location.href='/search/movie/<% if(search){%><%=search%>/<%= Number(current) + 1 %>/<% } %>'" class="btn mt-3 float-right btn-nav">Next</button>
 				<%}%>
 			</div>
 		</div>
-		<div class="row">
+		<div class="row mt-3">
 			<% if(!error && data){ %>
 				<% data["Search"].forEach((movie)=>{ %>
 					<%if(movie['Poster'] != 'N/A'){%>		
@@ -109,8 +109,6 @@
 				<% } %>				
 			</ul>
 		<% } %>
-		
-		
 	</div>
 </main>
 <%- include('partials/footer') %>

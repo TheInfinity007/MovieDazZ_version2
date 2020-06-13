@@ -513,7 +513,14 @@ section.landing:before
 {
 	box-shadow: none;
 }
-
+.m-celeb
+{
+	padding:10px auto 0;
+}
+.m-celeb .celeb_content
+{
+	margin:0 auto 20px;
+}
 
 @media(max-width: 768px)
 {

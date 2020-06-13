@@ -369,7 +369,7 @@ section.landing:before
 {
 	width:100vw;
 	height: 100vh;
-	/*background: linear-gradient(#0005,#0005), url(https://source.unsplash.com/random/1600×1600/?movies);*/
+	background: linear-gradient(#0005,#0005), url(https://source.unsplash.com/random/1600×1600/?movies);
 	background-size: cover;
 	background-repeat: no-repeat;
 	padding-top:57.2px;
@@ -565,6 +565,16 @@ section.landing:before
 	{
 		font-size:1rem;
 		padding:.25rem .75rem;
+	}
+	#login-page .form-wrapper,
+	#register-page .form-wrapper
+	{
+		width:90%;
+	}
+	#login-page .form-wrapper form,
+	#register-page .form-wrapper form
+	{
+		padding:0 40px;
 	}
 }
 @media(min-width: 769px)

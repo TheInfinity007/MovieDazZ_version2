@@ -129,7 +129,12 @@ grabPopularMovies = function(res){
 }
 
 router.get('/search/:type/:title/:pageNo/*', (req, res)=>{
-	let url = `http://www.omdbapi.com/?s=${req.params.title}&page=${req.params.pageNo}&type=movie&apikey=thewdb`;
+	let url;
+	if(req.query.year)
+		url = `http://www.omdbapi.com/?s=${req.params.title}&page=${req.params.pageNo}&type=movie&y=${req.query.year}&apikey=thewdb`;
+	else
+		url = `http://www.omdbapi.com/?s=${req.params.title}&page=${req.params.pageNo}&type=movie&apikey=thewdb`;
+	console.log(url);
 	request(url, (error, response, body)=>{
 		if(!error && response.statusCode == 200){
 			var data = JSON.parse(body);

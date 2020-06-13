@@ -146,11 +146,11 @@ router.get('/:movie_id/*', async (req, res)=>{
 	let movieId = req.params.movie_id.substr(0, req.params.movie_id.indexOf('-'));
 	let imdbId;
 	try{
-		foundContent = await ExternalIds.findOne({tmdbId: movieId}, {imdbId:1});
+		let foundContent = await ExternalIds.findOne({tmdbId: movieId}, {imdbId:1});
 		imdbId = foundContent.imdbId;
 		console.log("Found = ", foundContent);
 	}catch(err){	}
-	
+	console.log("IMDBID" = imdbId);
 	if(imdbId === undefined){
 		getImdbId(res, movieId);
 	}else{

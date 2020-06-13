@@ -5,10 +5,10 @@
 		<div class="row" style="position:relative">
 			<div class="px-3 d-flex justify-content-between w-100">
 				<%if(current !=1){%>
-					<button class="btn btn-primary my-3 " onclick="window.location.href='/search/movie/<% if(search){%><%=search%>/<%= Number(current)-1 %>/<% } %>'" style="vertical-align: initial;">Previous</button>
+					<button class="btn my-3 btn-nav" onclick="window.location.href='/search/movie/<% if(search){%><%=search%>/<%= Number(current)-1 %>/<% } %>'" style="vertical-align: initial;">Previous</button>
 				<%}%>
 				<%if(current < pages){%>
-						<button style="vertical-align: initial;margin:auto 0 auto auto" onclick="window.location.href='/search/movie/<% if(search){%><%=search%>/<%= Number(current) + 1 %>/<% } %>'" class="btn btn-primary my-3 float-right">Next</button>
+						<button style="vertical-align: initial;margin:auto 0 auto auto" onclick="window.location.href='/search/movie/<% if(search){%><%=search%>/<%= Number(current) + 1 %>/<% } %>'" class="btn my-3 float-right btn-nav">Next</button>
 				<%}%>
 			</div>
 		</div>
@@ -18,11 +18,13 @@
 				<%if(movie['Poster'] != 'N/A'){%>		
 					<div class="col-md-6 col-lg-3">
 						<div class="card">
-							<img class="card-img-top" src="<%if(movie['Poster'] == 'N/A'){%>https://res.cloudinary.com/infinity99/image/upload/v1586284960/movieSearchApp/pikachu_zwpedv.jpg<%}else{%><%= movie['Poster'] %><%}%>" alt="<%= movie['Title'] %>.jpg">
+							<a href="/movie/i/<%= movie['imdbID']%>/">
+								<img class="card-img-top" src="<%if(movie['Poster'] == 'N/A'){%>https://res.cloudinary.com/infinity99/image/upload/v1586284960/movieSearchApp/pikachu_zwpedv.jpg<%}else{%><%= movie['Poster'] %><%}%>" alt="<%= movie['Title'] %>.jpg">
+							</a>
 							<div class="card-body text-dark">
 								<h4 class="title"><%= movie['Title'] %> <span class="year"><h5>(<%= movie['Year'] %>)</h5></span></h4>
 								<p>
-									<a href="/movie/i/<%= movie['imdbID']%>/" class = "btn btn-primary"> More Info</a>
+									<a href="/movie/i/<%= movie['imdbID']%>/" class = "btn btn-primary btn-sm"> More Info</a>
 								</p>
 							</div>
 							<div class="">
@@ -57,11 +59,11 @@
 
 		<!-- Pagination Start -->
 		<% if(pages && pages > 0){ %>
-			<ul class="pagination">
+			<ul class="pagination pagination-sm">
 				<% if(current == 1){ %>
-					<li class="page-item disabled"><a class="page-link">First</a></li>
+					<li class="page-item disabled"><a class="page-link first">First</a></li>
 				<% }else{ %>
-					<li class="page-item"><a href="/search/movie/<% if(search){%><%=search%>/1/<% } %>" class="page-link">First</a></li>
+					<li class="page-item"><a href="/search/movie/<% if(search){%><%=search%>/1/<% } %>" class="page-link first">First</a></li>
 				<% } %>
 
 				<% if(current == 1){ %>				
@@ -72,7 +74,7 @@
 
 				<% var i = Number(current) > 5 ? Number(current)-4 : 1 %>
 				<% if(i !== 1){ %>
-					<li class="page-item disabled"><a class="page-link">...</a></li>
+					<li class="page-item disabled"><a class="page-link dot">...</a></li>
 				<% } %>
 				<% for(; i <= Number(current) + 4 && i <= pages; i++){ %>
 					<% if(i == current){ %>
@@ -81,7 +83,7 @@
 						<li class="page-item"><a href="/search/movie/<% if(search){%><%=search%>/<%= i %>/<% } %>" class="page-link"><%= i %></a></li>
 					<% } %>
 					<% if(i == Number(current)+4 && i < pages){ %>
-						<li class="page-item disabled"><a class="page-link">...</a></li>
+						<li class="page-item disabled"><a class="page-link dot">...</a></li>
 					<% } %>
 				<% } %>
 
@@ -92,9 +94,9 @@
 				<% } %>
 
 				<% if(current == pages){ %>
-					<li class="page-item disabled"><a class="page-link">Last</a></li>
+					<li class="page-item disabled"><a class="page-link last">Last</a></li>
 				<% }else{ %>
-					<li class="page-item"><a href="/search/movie/<% if(search){%><%=search%>/<%= pages %>/<% } %>" class="page-link">Last</a></li>
+					<li class="page-item"><a href="/search/movie/<% if(search){%><%=search%>/<%= pages %>/<% } %>" class="page-link last">Last</a></li>
 				<% } %>				
 			</ul>
 		<% } %>

@@ -223,3 +223,31 @@ a.page-link
 	color:green;
 	font-size:26px;
 }
+#result-page .year
+{
+	font-size:16px;
+}
+#result-page a.btn-primary
+{
+	background:#fff;
+	border:3px solid purple;
+	color:purple;
+	font-weight: bold;
+	border-radius:8px;
+}
+#result-page a.btn-primary:hover
+{
+	background:purple;
+	color:#fff;
+}
+@media(max-width:768px)
+{
+	#result-page .title
+	{
+		font-size:18px;
+	}
+	#result-page .year
+	{
+		font-size:12px;
+	}
+}

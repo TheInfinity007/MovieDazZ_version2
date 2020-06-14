@@ -7,7 +7,6 @@ const middleware = require('../middleware');
 const Movie = require('../models/movie');
 const ExternalIds = require("../models/externalId");
 
-
 var start;
 var trendingMovies = [];
 var theatreMovies = [];
@@ -280,7 +279,7 @@ getTmdb = function(req, id){
 				});
 			}
 		}
-	});	
+	});
 }
 
 router.get('/favourite/*', middleware.isLoggedIn, (req, res)=>{

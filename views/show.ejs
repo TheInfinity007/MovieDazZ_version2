@@ -66,14 +66,12 @@
 							<a href="/download/<%= data['imdbID'] %>/" target=""style="position: relative; top:12px;">
 								<i class="fa fa-download"></i>
 							</a>
-							<!-- <a href="https://yts.mx/movies/<%= data['Title'].toLowerCase().replace(/:/g, '').replace(/ /g, '-') +'-'+ data['Year'] %>" target="_blank"style="position: relative; top:12px;">
-								<i class="fa fa-download"></i>
-							</a> -->
 						</li>
 						<li class="play-trailer-wrapper">
-							<a href=""><i class="fa fa-play"></i> Play Trailer
+							<a href="/watch/trailer/<%= data['imdbID'] %>/" target="_blank">
+								<i class="fa fa-play"></i> Play Trailer
 							</a>
-						</span>
+						</li>
 					</ul>
 				</div>
 

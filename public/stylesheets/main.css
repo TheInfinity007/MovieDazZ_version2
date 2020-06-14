@@ -73,12 +73,29 @@ li.icon .fa
 	left:50%;
 	transform: translate(-50% ,-50%);
 }
+.icon-wrapper .icon:hover .fa-heart
+{
+	color:red;
+}
+.icon-wrapper .icon:hover .fa-bookmark
+{
+	color: #308d0d;
+}
+.icon-wrapper .icon:hover .fa-download
+{
+	color:#17abb4;
+}
 li.play-trailer-wrapper a
 {
 	display: inline-block;
-	height: 40px;
-	/*position: absolute;*/
-	/*top:12px;*/
+}
+li.play-trailer-wrapper a:hover
+{
+	color:#eee;
+}
+li.play-trailer-wrapper a:hover .fa-play
+{
+	color:purple;
 }
 .plot
 {

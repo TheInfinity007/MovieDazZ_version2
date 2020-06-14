@@ -535,7 +535,27 @@ router.get("/download/:imdbId/", (req, res)=>{
 			res.redirect('back');
 		}
 	});
-})
+});
+
+router.get('/watch/trailer/:imdbId/*', (req, res)=>{
+	let url = `https://yts.mx/api/v2/list_movies.json?query_term=${req.params.imdbId}`;
+	request(url, (error, response, body)=>{
+		if(!error && response.statusCode == 200){
+			let data = JSON.parse(body);
+			if(data['data']['movie_count'] > 0){
+				let yt_trailer_code = data['data']['movies'][0]['yt_trailer_code'];
+				url = `https://www.youtube.com/embed/${yt_trailer_code}?el=0&wmode=transparent&border=0&autoplay=1`;
+				res.redirect(url);
+			}else{
+				console.log("Trailer not found");
+				res.redirect('/movie/i/' + req.params.imdbId + '/');
+			}
+		}else{
+			console.log("Error Occurred in Getting the trailer");
+			res.redirect('/movie/i/' + req.params.imdbId + '/');
+		}
+	});
+});
 
 router.get("/*", (req, res)=>{
 	isRender = false;

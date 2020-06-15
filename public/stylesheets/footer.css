@@ -27,3 +27,8 @@ footer .social-media-icons
 {
 	display: inline;
 }
+footer .social-media-icons a
+{
+	color:white;
+	text-decoration:none;
+}

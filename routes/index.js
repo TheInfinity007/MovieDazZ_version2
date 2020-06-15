@@ -229,6 +229,9 @@ getImdb = function(req, id, title, img, rel){
 			let data = JSON.parse(body);
 			imdbId = data['imdb_id'];
 			addToFavouriteMovie(imdbId, title, img, rel);
+			ExternalIds.create({tmdbId: id, imdbId: imdbId}, (err, obj)=>{
+				console.log("New = " + obj);
+			});
 			User.findById(req.user._id, (err, user)=>{
 				if(err){
 					console.log(err);
@@ -412,6 +415,9 @@ getTmdbWatchList = function(req, id){
 				let tmdbId = data["movie_results"][0]["id"];
 				console.log("TMDB ID IS ", tmdbId);
 
+				ExternalIds.create({tmdbId: tmdbId, imdbId: id}, (err, obj)=>{
+					console.log("New = " + obj);
+				});
 				User.findById(req.user._id, (err, user)=>{
 					if(err){
 						console.log(err);
@@ -521,12 +527,21 @@ grabRecommendationAndRender = function(res, id, img, torrents, title){
 	request(url, (error, response, body)=>{
 		if(!error && response.statusCode == 200){
 			let data = JSON.parse(body);
-			for(i = 0; i < 10 ; i++){
-				recommendations.push(data['results'][i]);
-				if(i == 9) res.render('download', {img: img, data: torrents, title: title, recommendations: recommendations});
+			if(data['results'].length > 0){
+				for(i = 0; i < 10 && i < data['results'].length; i++){
+					recommendations.push(data['results'][i]);
+					if(i == 9){
+						console.log("Recommendation found" + recommendations);
+						res.render('download', {img: img, data: torrents, title: title, recommendations: recommendations});
+					}
+				}
+			}else{
+				console.log("recommendations not found")
+				res.render('download', {img: img, data: torrents, title: title, recommendations: null});
 			}
 		}else{
-			res.render('download', {img: img, data: torrents, title: title, recommendations: recommendations});
+			console.log("Error occured in getting the recommendations");
+			res.render('download', {img: img, data: torrents, title: title, recommendations: null});
 		}
 	});
 }
@@ -555,7 +570,8 @@ router.get("/download/:imdbId/", async(req, res)=>{
 				}
 			}
 			else{
-				res.render('download', {img: 'https://source.unsplash.com/random/1600×1600/?movies', data: null, title: null, recommendations: recommendations});
+				if(tmdbId) grabRecommendationAndRender(res, tmdbId, 'https://source.unsplash.com/random/1600×1600/?movies', null, null);
+				else res.render('download', {img: 'https://source.unsplash.com/random/1600×1600/?movies', data: null, title: null, recommendations: recommendations});
 				console.log("Download is not available.");
 			}
 		}else{

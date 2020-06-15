@@ -5,8 +5,6 @@ footer
 	position: absolute;
 	text-align:center;
 	width:100%;
-	/*height: 40px;*/
-	/*bottom:0;*/
 	background: purple;
 	color:#fff;
 }
@@ -22,6 +20,10 @@ footer .text-muted
 {
 	color:#fff;
 	text-decoration: none;
+}
+footer .footer-link:hover
+{
+	color:#bdb4be;
 }
 footer .social-media-icons
 {

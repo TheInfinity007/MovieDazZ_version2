@@ -5,7 +5,7 @@
 	<div class="container-fluid" id="show" style="position: relative;top:-1px">
 		<div class="row p-2 p-md-5">
 			<div class="col-md-4 text-center">
-				<img class="img-thumbnail mt-md-5 mb-md-0 mb-2" src="<%= data['Poster']%>"></img>
+				<img class="img-thumbnail mt-md-5 mb-md-0 mb-2" src="<%if(data['Poster'] != 'N/A'){%><%= data['Poster']%><% } else {%>https://source.unsplash.com/random/1600×1600/?<%= data['Title']%><%}%>">
 			</div>
 			<div class="col-md-8">
 				<div class="title mt-md-5 mb-3"><h1 class="d-inline"><%= data['Title'] %></h1><span class="year"><h2 class="d-inline"> (<%= data['Year'] %>)</h2></span></div>

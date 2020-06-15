@@ -163,7 +163,7 @@ grabRecommendation = function(id){
 	request(url, (error, response, body)=>{
 		if(!error && response.statusCode == 200){
 			let data = JSON.parse(body);
-			for(i = 0; i < 10 ; i++){
+			for(i = 0; i < 10 && i < data['results'].length; i++){
 				recommendations.push(data['results'][i]);
 			}
 		}

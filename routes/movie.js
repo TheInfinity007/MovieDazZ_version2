@@ -4,7 +4,7 @@ const request = require('request');
 const ExternalIds = require("../models/externalId");
 
 var start;
-
+var recommendations = [];
 
 getImdbId = function(res, mId){
 	let url = `https://api.themoviedb.org/3/movie/${mId}/external_ids?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
@@ -27,6 +27,8 @@ getImdbId = function(res, mId){
 		}else{
 			if(error)console.log("Error1 = ", error);
 			if(response){console.log("Status Code1 = ", response.statusCode);}
+			console.log("Unable to get the imdb id from tmdb id");
+			res.redirect('back');
 		}
 	});
 }
@@ -43,7 +45,7 @@ grabMovieData = function(res, imdbId){
 			let data = JSON.parse(body);
 			if(data.Response == 'True'){
 				console.log(new Date().getTime()-start);
-				res.render("show", {data: data});
+				res.render("show", {data: data, recommendations: recommendations});
 			}else{
 				console.log("Data Not Found Exit 2");
 				res.redirect('back');
@@ -141,9 +143,32 @@ router.get('/trending/*', (req, res)=>{
 })
 
 //FOR SEARCH PAGE
-router.get('/i/:imdb_id/*', (req, res)=>{
+router.get('/i/:imdb_id/*', async(req, res)=>{
+	try{
+		let foundContent = await ExternalIds.findOne({imdbId: req.params.imdb_id});
+		tmdbId = foundContent.tmdbId;
+		console.log("Found = ", foundContent);
+		if(tmdbId){
+			console.log("Finding the recommendations");
+			grabRecommendation(tmdbId);
+		}
+	}catch(err){	}
 	grabMovieData(res, req.params.imdb_id);
 });
+
+grabRecommendation = function(id){
+	recommendations  = [];
+	let url = `https://api.themoviedb.org/3/movie/${id}/recommendations?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`
+	console.log(url);
+	request(url, (error, response, body)=>{
+		if(!error && response.statusCode == 200){
+			let data = JSON.parse(body);
+			for(i = 0; i < 10 ; i++){
+				recommendations.push(data['results'][i]);
+			}
+		}
+	});
+}
 
 // TO GET THE DETAILS ABOUT A MOVIE FROM HOME PAGE MOVIES CATEGORIES PAGE
 router.get('/:movie_id/*', async (req, res)=>{
@@ -151,18 +176,20 @@ router.get('/:movie_id/*', async (req, res)=>{
 	start = new Date().getTime();
 	let movieId = req.params.movie_id.substr(0, req.params.movie_id.indexOf('-')) || req.params.movie_id;
 	console.log(movieId);
+	grabRecommendation(movieId);
 	let imdbId;
 	try{
 		let foundContent = await ExternalIds.findOne({tmdbId: movieId}, {imdbId:1});
 		imdbId = foundContent.imdbId;
 		console.log("Found = ", foundContent);
 	}catch(err){	}
-	console.log("IMDBID" + imdbId);
+	console.log("IMDBID = " + imdbId);
 	if(imdbId === undefined){
 		getImdbId(res, movieId);
 	}else{
 	 	 grabMovieData(res, imdbId)
 	}
+	console.log(movieId);
 });
 
 router.get('/*', (req, res)=>{

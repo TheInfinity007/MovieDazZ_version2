@@ -134,8 +134,57 @@
 			</div>
 		</div>
 	</div>
-
 </main>
+<% if(recommendations && recommendations.length > 0){ %>
+<div class="container-fluid">
+	<section class="m-trending mt-3">
+		<div class="header">
+			<h3 style="">Recommended Movies</h3>
+		</div>
+		<div class="cards-wrapper">
+			<div class="movie-cards">	
+
+				<% recommendations.forEach((movie)=>{ %>
+					<div class="movie-card">
+						<a href="/movie/<%= movie['id']%>-<%=movie['title'].split(' ').join('-')%>/">
+							<div class="img">
+								<img src="https://image.tmdb.org/t/p/original<%= movie['poster_path']%>" class="">	
+							</div>			
+						</a>					
+						<div class="">
+							<% if(currentUser && currentUser.favouriteMovieList.some((id)=>{ return id == movie[0]})){ %>
+								<span class="favourite" title="Remove From Favourite">
+									<form method="POST" action="/favourite/<%= movie['id'] %>?_method=DELETE">
+										<button style="background:transparent; border:0;outline: none">
+											<i class="fa fa-heart active"></i>
+										</button>
+									</form>
+								</span>
+							<%}else{%>
+								<span class="favourite" title="Add to Favourite">
+									<form method="POST" action="/favourite">
+										<input type="hidden" name="id" value="<%= movie['id']%>">
+										<input type="hidden" name="title" value="<%= movie['title']%>">
+										<input type="hidden" name="release" value="<%= movie['release_date']%>">
+										<input type="hidden" name="img" value="https://image.tmdb.org/t/p/original<%= movie['poster_path']%>">
+										<button style="background:transparent; border:0;outline: none">
+											<i class="fa fa-heart"></i>
+										</button>
+									</form>
+								</spsn>
+							<% }%>
+						</div>
+						<div class="card-content">
+							<h5 title="<%=movie['title']%>"><% if(movie['title'].length > 20){%><%= movie['title'].slice(0, 17)%>...<%}else{%><%= movie['title']%><%}%></h5>
+							<div class="card-release"><%=movie['release_date']%></div>
+						</div>
+					</div>
+				<% }); %>
+			</div>
+		</div>			
+	</section>
+</div>
+<% } %>
 
 
 <%- include('partials/footer') %>

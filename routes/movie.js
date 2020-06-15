@@ -32,7 +32,10 @@ getImdbId = function(res, mId){
 }
 
 grabMovieData = function(res, imdbId){
-	if(imdbId == null)	return res.send("IMDB ID IS NOT DEFINED FOR THIS MOVIE");
+	if(imdbId == null){
+		console.log("IMDB ID IS NOT DEFINED FOR THIS MOVIE")
+		return res.redirect('/');
+	}
 	url = `http://www.omdbapi.com/?i=${imdbId}&plot=full&apikey=thewdb`;
 	console.log(url);
 	request(url, (error, response, body)=>{
@@ -42,12 +45,14 @@ grabMovieData = function(res, imdbId){
 				console.log(new Date().getTime()-start);
 				res.render("show", {data: data});
 			}else{
-				res.send("Data Not Found Exit 2");
+				console.log("Data Not Found Exit 2");
+				res.redirect('back');
 			}
 		}else{
 			if(error)console.log("Error = ", error);
 			if(response){console.log("Status Code = ", response.statusCode);}
-			res.send("ERROR OCCURED IN FETCHING THE DATA");
+			console.log("ERROR OCCURED IN FETCHING THE DATA");
+			res.redirect('back');
 		}
 	});
 }
@@ -79,7 +84,8 @@ getMovies = function(res, url, pageTitle, pageUrl, pageNo){
 		}else{
 			if(error)console.log("Error = ", error);
 			if(response){console.log("Status Code = ", response.statusCode);}
-			res.send("ERROR OCCURED IN FETCHING THE DATA");
+			console.log("ERROR OCCURED IN FETCHING THE DATA");
+			res.redirect('back');
 		}
 	});
 }
@@ -139,14 +145,14 @@ router.get('/i/:imdb_id/*', (req, res)=>{
 	grabMovieData(res, req.params.imdb_id);
 });
 
-// TO GET THE DETAILS ABOUT A MOVIE IN HOME PAGE MOVIES CATEGORIES PAGE
+// TO GET THE DETAILS ABOUT A MOVIE FROM HOME PAGE MOVIES CATEGORIES PAGE
 router.get('/:movie_id/*', async (req, res)=>{
 	console.log("Movie get Route");
 	start = new Date().getTime();
-	let movieId = req.params.movie_id.substr(0, req.params.movie_id.indexOf('-'));
+	let movieId = req.params.movie_id.substr(0, req.params.movie_id.indexOf('-')) || req.params.movie_id;
+	console.log(movieId);
 	let imdbId;
 	try{
-		console.log("Insitde the try block");
 		let foundContent = await ExternalIds.findOne({tmdbId: movieId}, {imdbId:1});
 		imdbId = foundContent.imdbId;
 		console.log("Found = ", foundContent);

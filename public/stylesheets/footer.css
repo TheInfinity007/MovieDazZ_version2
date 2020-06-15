@@ -34,3 +34,7 @@ footer .social-media-icons a
 	color:white;
 	text-decoration:none;
 }
+footer .social-media-icons a:hover
+{
+	color:#d255d2;
+}

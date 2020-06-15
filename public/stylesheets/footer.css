@@ -5,8 +5,8 @@ footer
 	position: absolute;
 	text-align:center;
 	width:100%;
-	height: 40px;
-	bottom:0;
+	/*height: 40px;*/
+	/*bottom:0;*/
 	background: purple;
 	color:#fff;
 }
@@ -22,4 +22,8 @@ footer .text-muted
 {
 	color:#fff;
 	text-decoration: none;
+}
+footer .social-media-icons
+{
+	display: inline;
 }

@@ -311,6 +311,16 @@ section.landing:before
 	padding-top:57.2px;
 	padding-bottom:15px;
 }
+#favoruite-wrapper
+{
+	min-height: 92vh;
+}
+@media(max-width: 768px){
+	#favourite-wrapper
+	{
+		min-height:91vh;
+	}
+}
 .main-title
 {
 	width:100%;

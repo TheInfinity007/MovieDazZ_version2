@@ -12,6 +12,7 @@ var trendingMovies = [];
 var theatreMovies = [];
 var upcomingMovies = [];
 var popularMovies = [];
+var recommendations = [];
 var isRender = false;
 
 checkMovies = function(res){
@@ -513,7 +514,31 @@ router.delete('/watchlist/:imdbId', middleware.isLoggedIn, (req, res)=>{
 	});
 });
 
-router.get("/download/:imdbId/", (req, res)=>{
+grabRecommendationAndRender = function(res, id, img, torrents, title){
+	recommendations  = [];
+	let url = `https://api.themoviedb.org/3/movie/${id}/recommendations?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`
+	console.log(url);
+	request(url, (error, response, body)=>{
+		if(!error && response.statusCode == 200){
+			let data = JSON.parse(body);
+			for(i = 0; i < 10 ; i++){
+				recommendations.push(data['results'][i]);
+				if(i == 9) res.render('download', {img: img, data: torrents, title: title, recommendations: recommendations});
+			}
+		}else{
+			res.render('download', {img: img, data: torrents, title: title, recommendations: recommendations});
+		}
+	});
+}
+
+router.get("/download/:imdbId/", async(req, res)=>{
+	let tmdbId;
+	try{
+		let foundContent = await ExternalIds.findOne({imdbId: req.params.imdbId});
+		tmdbId = foundContent.tmdbId;
+		console.log("Found = ", foundContent);
+	}catch(err){	}
+
 	let url = `https://yts.mx/api/v2/list_movies.json?query_term=${req.params.imdbId}`;
 	request(url, (error, response, body)=>{
 		if(!error && response.statusCode == 200){
@@ -522,10 +547,15 @@ router.get("/download/:imdbId/", (req, res)=>{
 				data = data['data']['movies'][0];
 				let img = data['small_cover_image'];
 				let title = data['title'];
-				res.render('download', {img: img, data: data['torrents'], title: title});
+
+				if(tmdbId){
+					grabRecommendationAndRender(res, tmdbId, img, data['torrents'], title);
+				}else{				
+					res.render('download', {img: img, data: data['torrents'], title: title, recommendations: recommendations});
+				}
 			}
 			else{
-				res.render('download', {img: 'https://source.unsplash.com/random/1600×1600/?movies', data: null, title: null});
+				res.render('download', {img: 'https://source.unsplash.com/random/1600×1600/?movies', data: null, title: null, recommendations: recommendations});
 				console.log("Download is not available.");
 			}
 		}else{

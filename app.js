@@ -48,8 +48,8 @@ app.use("/movie", movieRoute);
 app.use('/celebrity', celebrityRoute);
 app.use('/', indexRoute);
 
-app.listen(process.env.PORT || 3000, ()=>{
+app.listen(process.env.PORT || 5000, ()=>{
 	console.log('MovieDazZ Has Started');
-	console.log('Server is listening at localhost:3000');
+	console.log('Server is listening at localhost:5000');
 });
 

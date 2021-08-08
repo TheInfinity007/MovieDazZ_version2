@@ -1,12 +1,14 @@
+// const DOMAIN = "http://localhost:5000/"
+
 const CACHE_NAME = 'v1';
 const toCache = [
     '/',   
-    '/js/pwa.js', 
-    '/js/status.js',
-    '/stylesheets/index.css',
-    '/stylesheets/main.css',
-    '/js/script.js',
+    // '/js/status.js',
+    // '/stylesheets/index.css',
+    // '/stylesheets/main.css',
+    // '/js/script.js',
 ];
+let count = 0;
 
 self.addEventListener('install', function(event) {
     console.log('Service Worker: Installing....');
@@ -21,6 +23,24 @@ self.addEventListener('install', function(event) {
     )
 });
 
+function isSameDomain(domain){
+    console.log("same domain");
+}
+
+self.addEventListener('fetch', function(event) {
+    event.respondWith(
+        caches.open(CACHE_NAME).then(function(cache) {
+            return cache.match(event.request).then(function (response) {
+                return response || fetch(event.request).then(function(response) {
+                    cache.put(event.request, response.clone());
+                    return response;
+                });
+            });
+        })
+    );
+});
+
+/*
 self.addEventListener('fetch', function(event) {
 
     // console.log('Service Worker: Fetch', event.request.url); 
@@ -44,7 +64,7 @@ self.addEventListener('fetch', function(event) {
                 .then((res) => {
                     return res;
                 })
-                // .then((res) => {
+                //  .then((res) => {
                 //     if(!res){
                 //         console.log("page is not in cache", res, event.request.url);
                 //         send a 404 response
@@ -53,9 +73,11 @@ self.addEventListener('fetch', function(event) {
                 //     else
                 //         return res;
                 // })
+                
         })
     );
 });
+*/
 
 
 // Fired when the Service Worker starts up

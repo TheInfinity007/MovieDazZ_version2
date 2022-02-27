@@ -1,6 +1,6 @@
 // const DOMAIN = "http://localhost:5000/"
 
-const CACHE_NAME = 'v1';
+const CACHE_NAME = 'v2';
 const filesToCache = [
     '/',   
     // '/js/status.js',

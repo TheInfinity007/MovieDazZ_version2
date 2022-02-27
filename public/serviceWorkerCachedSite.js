@@ -16,7 +16,7 @@ let count = 0;
 // like html, css, js 
 self.addEventListener('install', function(event) {
     console.log('Service Worker: Installing....');
-    
+
     event.waitUntil(
 
         caches.open(CACHE_NAME)
@@ -31,6 +31,9 @@ function isSameDomain(domain){
     console.log("same domain");
 }
 
+
+// cache falling back to the network
+// this is most useful for Offline first web app
 self.addEventListener('fetch', function(event) {
 
     event.respondWith(

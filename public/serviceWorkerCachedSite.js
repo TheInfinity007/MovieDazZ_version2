@@ -1,26 +1,30 @@
 // const DOMAIN = "http://localhost:5000/"
 
 const CACHE_NAME = 'v1';
-const toCache = [
+const filesToCache = [
     '/',   
     // '/js/status.js',
     // '/stylesheets/index.css',
     // '/stylesheets/main.css',
     // '/js/script.js',
+    // '/offline.html',
 ];
 let count = 0;
 
+
+// cache the static resources in the install event 
+// like html, css, js 
 self.addEventListener('install', function(event) {
     console.log('Service Worker: Installing....');
-
+    
     event.waitUntil(
 
         caches.open(CACHE_NAME)
             .then((cache) => {
-                return cache.addAll(toCache)
+                return cache.addAll(filesToCache)
             })
-            .then(self.skipWaiting())
-    )
+            .then(() => self.skipWaiting())
+    );
 });
 
 function isSameDomain(domain){
@@ -28,6 +32,7 @@ function isSameDomain(domain){
 }
 
 self.addEventListener('fetch', function(event) {
+
     event.respondWith(
         caches.open(CACHE_NAME).then(function(cache) {
             return cache.match(event.request).then(function (response) {
@@ -39,6 +44,8 @@ self.addEventListener('fetch', function(event) {
         })
     );
 });
+
+
 
 /*
 self.addEventListener('fetch', function(event) {
@@ -84,17 +91,16 @@ self.addEventListener('fetch', function(event) {
 self.addEventListener('activate', function(event) {
     console.log('Service Worker: Activating....');
 
+    // delete any caches that aren't in expectedCaches
+    // or delete outdated caches
     event.waitUntil(
-        caches.keys()
-            .then((cacheNames) => {
-                return Promise.all(cacheNames.map((key) => {
-                    if( key !== CACHE_NAME) {
-                        console.log('[Service Worker] Removing Old cache', key);
-                        return caches.delete(key);
-                    }
-                }))
-            
-            })
-            .then(() => self.clients.claim())
-    )
+        caches.keys().then((cacheNames) => {
+            return Promise.all(cacheNames.map((key) => {
+                if( key !== CACHE_NAME) {
+                    console.log('[Service Worker] Removing Old cache', key);
+                    return caches.delete(key);
+                }
+            }))
+        }));
+    return self.clients.claim();
 });

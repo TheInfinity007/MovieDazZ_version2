@@ -11,7 +11,6 @@ const filesToCache = [
 ];
 let count = 0;
 
-
 // cache the static resources in the install event 
 // like html, css, js 
 self.addEventListener('install', function(event) {
@@ -31,22 +30,61 @@ function isSameDomain(domain){
     console.log("same domain");
 }
 
+const updateCache = async (event) => {
 
-// cache falling back to the network
-// this is most useful for Offline first web app
+    return fetch(event.request).then((response) => {
+        caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, response);
+            console.log("Cache updated");
+        });
+        
+        return Promise.resolve();
+    }).catch((err) => {
+        console.log("error in fetching uri");
+        return Promise.resolve();
+    });
+
+}
+
+// render cache and update the cache in background with network
 self.addEventListener('fetch', function(event) {
 
     event.respondWith(
         caches.open(CACHE_NAME).then(function(cache) {
-            return cache.match(event.request).then(function (response) {
-                return response || fetch(event.request).then(function(response) {
+            return cache.match(event.request).then(async (response) => {
+
+                if (response) {
+                    updateCache(event);
+                    return response;
+                }
+                
+                return fetch(event.request).then(function(response) {
                     cache.put(event.request, response.clone());
                     return response;
                 });
+
             });
         })
     );
+
 });
+
+
+// cache falling back to the network
+// this is most useful for Offline first web app
+// self.addEventListener('fetch', function(event) {
+
+//     event.respondWith(
+//         caches.open(CACHE_NAME).then(function(cache) {
+//             return cache.match(event.request).then(function (response) {
+//                 return response || fetch(event.request).then(function(response) {
+//                     cache.put(event.request, response.clone());
+//                     return response;
+//                 });
+//             });
+//         })
+//     );
+// });
 
 
 

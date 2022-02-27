@@ -51,38 +51,39 @@ self.addEventListener('fetch', function(event) {
 
 
 /*
+
+// Network falling back to the cache
 self.addEventListener('fetch', function(event) {
 
     // console.log('Service Worker: Fetch', event.request.url); 
 
     event.respondWith(
-      fetch(event.request)
-        .then((res) => {
+
+      fetch(event.request).then((res) => {
             // Make clone of the response
             const resClone = res.clone();
-            // Open cache
-            caches
-                .open(CACHE_NAME)
-                .then(cache => {
-                    // add response to cache
+            
+            caches.open(CACHE_NAME).then(cache => {
                     cache.put(event.request, resClone);
-                }); 
+            }); 
             return res;
         })
         .catch((err) => {
-            caches.match(event.request)
-                .then((res) => {
+            caches.match(event.request).then((res) => {
                     return res;
-                })
-                //  .then((res) => {
-                //     if(!res){
-                //         console.log("page is not in cache", res, event.request.url);
-                //         send a 404 response
-                //         return "Hello";
-                //     }
-                //     else
-                //         return res;
-                // })
+            })
+            .then((res) => {
+                if(!res){
+                    console.log("page is not in cache", res, event.request.url);
+                    //send a 404 response
+                    return "You are offline";
+                }
+                else
+                    return res;
+            })
+            .catch((err) => {
+                return "You are offline";
+            })
                 
         })
     );

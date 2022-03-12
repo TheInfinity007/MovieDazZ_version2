@@ -16,8 +16,8 @@ let popularMovies = [];
 let recommendations = [];
 let isRender = false;
 
-checkMovies = function (res) {
-    if (isRender == false) {
+const checkMovies = (res) => {
+    if (isRender === false) {
         if (trendingMovies.length > 0 && theatreMovies.length > 0 && upcomingMovies.length > 0 && popularMovies.length > 0) {
             console.log(new Date().getTime() - start);
             isRender = true;
@@ -28,11 +28,11 @@ checkMovies = function (res) {
     }
 };
 
-grabTrendingMovies = function (res) {
+const grabTrendingMovies = (res) => {
     if (trendingMovies.length < 1) {
-        url = 'https://api.themoviedb.org/3/trending/movie/day?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9';
+        const url = 'https://api.themoviedb.org/3/trending/movie/day?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9';
         request(url, (error, response, body) => {
-            if (!error && response.statusCode == 200) {
+            if (!error && response.statusCode === 200) {
                 const data = JSON.parse(body);
                 data.results.forEach((result) => {
                     if (result.poster_path === null) return;
@@ -54,11 +54,11 @@ grabTrendingMovies = function (res) {
     }
 };
 
-grabTheatreMovies = function (res) {
+const grabTheatreMovies = (res) => {
     if (theatreMovies.length < 1) {
         const url = 'https://api.themoviedb.org/3/movie/now_playing?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9';
         request(url, (error, response, body) => {
-            if (!error && response.statusCode == 200) {
+            if (!error && response.statusCode === 200) {
                 const data = JSON.parse(body);
                 data.results.forEach((result) => {
                     if (result.poster_path === null) return;
@@ -80,11 +80,11 @@ grabTheatreMovies = function (res) {
     }
 };
 
-grabUpcomingMovies = function (res) {
+const grabUpcomingMovies = (res) => {
     if (upcomingMovies.length < 1) {
         const url = 'https://api.themoviedb.org/3/movie/upcoming?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9';
         request(url, (error, response, body) => {
-            if (!error && response.statusCode == 200) {
+            if (!error && response.statusCode === 200) {
                 const data = JSON.parse(body);
                 data.results.forEach((result) => {
                     if (result.poster_path === null) return;
@@ -105,11 +105,12 @@ grabUpcomingMovies = function (res) {
         });
     }
 };
-grabPopularMovies = function (res) {
+
+const grabPopularMovies = (res) => {
     if (popularMovies.length < 1) {
         const url = 'https://api.themoviedb.org/3/movie/popular?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9';
         request(url, (error, response, body) => {
-            if (!error && response.statusCode == 200) {
+            if (!error && response.statusCode === 200) {
                 const data = JSON.parse(body);
                 data.results.forEach((result) => {
                     if (result.poster_path === null) return;
@@ -136,9 +137,9 @@ router.get('/search/:type/:title/:pageNo/*', (req, res) => {
     if (req.query.year) { url = `http://www.omdbapi.com/?s=${req.params.title}&page=${req.params.pageNo}&type=movie&y=${req.query.year}&apikey=thewdb`; } else { url = `http://www.omdbapi.com/?s=${req.params.title}&page=${req.params.pageNo}&type=movie&apikey=thewdb`; }
     console.log(url);
     request(url, (error, response, body) => {
-        if (!error && response.statusCode == 200) {
+        if (!error && response.statusCode === 200) {
             const data = JSON.parse(body);
-            if (data.Response == 'True') {
+            if (data.Response.toLowerCase() === 'true') {
                 res.render('result', {
                     data,
                     search: req.params.title,
@@ -202,6 +203,7 @@ router.get('/login/*', (req, res) => {
 router.post('/login', passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/login/',
+// eslint-disable-next-line no-unused-vars
 }), (req, res) => {
     console.log('Loggin the user');
 });
@@ -213,19 +215,38 @@ router.get('/logout/*', (req, res) => {
     res.redirect('/');
 });
 
-isNumber = function (num) {
-    if (!parseInt(num)) {
-        return false;		// This is a string
+const isNumber = (num) => {
+    if (!parseInt(num, 10)) {
+        return false;
     }
-    return true;		// This is a Number
+    return true;
 };
 
-getImdb = function (req, id, title, img, rel) {
+const addToFavouriteMovie = (id, title, img, rel) => {
+    const newMovie = new Movie({
+        imdbId: id,
+        title,
+        imgUrl: img,
+        release: rel,
+    });
+
+    // eslint-disable-next-line no-unused-vars
+    Movie.create(newMovie, (err, movie) => {
+        if (err) {
+            console.log(err);
+            console.log('Movie already Exist.');
+        } else {
+            console.log('Add a New Movie');
+        }
+    });
+};
+
+const getImdb = (req, id, title, img, rel) => {
     const url = `https://api.themoviedb.org/3/movie/${id}/external_ids?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
     request(url, (error, response, body) => {
-        if (!error && response.statusCode == 200) {
+        if (!error && response.statusCode === 200) {
             const data = JSON.parse(body);
-            imdbId = data.imdb_id;
+            const imdbId = data.imdb_id;
             addToFavouriteMovie(imdbId, title, img, rel);
             ExternalIds.create({ tmdbId: id, imdbId }, (err, obj) => {
                 console.log(`New = ${obj}`);
@@ -242,28 +263,11 @@ getImdb = function (req, id, title, img, rel) {
     });
 };
 
-addToFavouriteMovie = function (id, title, img, rel) {
-    const newMovie = new Movie({
-        imdbId: id,
-        title,
-        imgUrl: img,
-        release: rel,
-    });
-    Movie.create(newMovie, (err, movie) => {
-        if (err) {
-            console.log(err);
-            console.log('Movie already Exist.');
-        } else {
-            console.log('Add a New Movie');
-        }
-    });
-};
-
-getTmdb = function (req, id) {
+const getTmdb = (req, id) => {
     const url = `https://api.themoviedb.org/3/find/${id}?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9&external_source=imdb_id`;
     console.log(url);
     request(url, (error, response, body) => {
-        if (!error && response.statusCode == 200) {
+        if (!error && response.statusCode === 200) {
             const data = JSON.parse(body);
 
             if (data.movie_results.length > 0) {
@@ -285,13 +289,13 @@ getTmdb = function (req, id) {
 
 router.get('/favourite/*', middleware.isLoggedIn, (req, res) => {
     User.findById(req.user._id, (err, user) => {
-        const myFav = user.favouriteMovieList.filter((id) => id[0] == 't');
+        const myFav = user.favouriteMovieList.filter((id) => id[0] === 't');
         const movies = [];
-        if (myFav.length == 0) { res.render('favourite', { movies: null, pageTitle: 'Favourites' }); }
+        if (myFav.length === 0) { res.render('favourite', { movies: null, pageTitle: 'Favourites' }); }
         myFav.forEach((mId, i) => {
             Movie.findOne({ imdbId: mId }, (err, movie) => {
                 movies.push(movie);
-                if (i == myFav.length - 1) {
+                if (i === myFav.length - 1) {
                     res.render('favourite', { movies, pageTitle: 'Favourites' });
                 }
             });
@@ -312,10 +316,10 @@ router.post('/favourite', middleware.isLoggedIn, (req, res) => {
             console.log(err);
             return res.redirect('/');
         }
-        const newMovie = user.favouriteMovieList.every((movieId) => movieId != imdbId);
+        const newMovie = user.favouriteMovieList.every((movieId) => movieId !== imdbId);
         console.log(newMovie);
         if (newMovie) {
-            if (isNumber(imdbId)) {			// if the id is the tmdb id
+            if (isNumber(imdbId)) { // if the id is the tmdb id
                 getImdb(req, imdbId, title, img, release);
             } else {
                 getTmdb(req, imdbId);
@@ -328,7 +332,7 @@ router.post('/favourite', middleware.isLoggedIn, (req, res) => {
         } else {
             console.log('Movie already Exist in favourites');
         }
-        res.redirect('back');
+        return res.redirect('back');
     });
 });
 
@@ -342,32 +346,36 @@ router.delete('/favourite/:imdbId', middleware.isLoggedIn, (req, res) => {
             console.log('Error occurred in fetching the user');
             res.redirect('/');
         } else {
-            if (isNumber(id)) {		// if the id is the tmdb id
+            if (isNumber(id)) { // if the id is the tmdb id
                 try {
                     tmdbid = id;
                     const foundContent = await ExternalIds.findOne({ tmdbId: id });
                     imdbid = foundContent.imdbId;
-                } catch (err) {}
-            } else {							// if id is imdb id
+                } catch (err) {
+                    // silent
+                }
+            } else { // if id is imdb id
                 try {
                     imdbid = id;
                     const foundContent = await ExternalIds.findOne({ imdbId: id });
                     tmdbid = foundContent.tmdbId;
-                } catch (err) {}
+                } catch (err) {
+                    // silent
+                }
             }
             console.log(imdbid, tmdbid);
             let i = -1; let
                 t = -1;
             user.favouriteMovieList.forEach((id, index) => {
-                if (id == tmdbid) { t = index; }
-                if (id == imdbid) { i = index; }
+                if (id === tmdbid) { t = index; }
+                if (id === imdbid) { i = index; }
             });
             if (i > t) {
-                if (i != -1) user.favouriteMovieList.splice(i, 1);
-                if (t != -1) user.favouriteMovieList.splice(t, 1);
+                if (i !== -1) user.favouriteMovieList.splice(i, 1);
+                if (t !== -1) user.favouriteMovieList.splice(t, 1);
             } else {
-                if (t != -1) user.favouriteMovieList.splice(t, 1);
-                if (i != -1) user.favouriteMovieList.splice(i, 1);
+                if (t !== -1) user.favouriteMovieList.splice(t, 1);
+                if (i !== -1) user.favouriteMovieList.splice(i, 1);
             }
             console.log('Movie removed from favourites');
             user.save();
@@ -376,12 +384,12 @@ router.delete('/favourite/:imdbId', middleware.isLoggedIn, (req, res) => {
     });
 });
 
-getImdbWatchList = function (req, id, title, img, rel) {
+const getImdbWatchList = (req, id, title, img, rel) => {
     const url = `https://api.themoviedb.org/3/movie/${id}/external_ids?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
     request(url, (error, response, body) => {
-        if (!error && response.statusCode == 200) {
+        if (!error && response.statusCode === 200) {
             const data = JSON.parse(body);
-            imdbId = data.imdb_id;
+            const imdbId = data.imdb_id;
             addToFavouriteMovie(imdbId, title, img, rel);
             User.findById(req.user._id, (err, user) => {
                 if (err) {
@@ -395,11 +403,11 @@ getImdbWatchList = function (req, id, title, img, rel) {
     });
 };
 
-getTmdbWatchList = function (req, id) {
+const getTmdbWatchList = (req, id) => {
     const url = `https://api.themoviedb.org/3/find/${id}?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9&external_source=imdb_id`;
     console.log(url);
     request(url, (error, response, body) => {
-        if (!error && response.statusCode == 200) {
+        if (!error && response.statusCode === 200) {
             const data = JSON.parse(body);
 
             if (data.movie_results.length > 0) {
@@ -424,13 +432,13 @@ getTmdbWatchList = function (req, id) {
 
 router.get('/watchlist/*', middleware.isLoggedIn, (req, res) => {
     User.findById(req.user._id, (err, user) => {
-        const myList = user.watchList.filter((id) => id[0] == 't');
+        const myList = user.watchList.filter((id) => id[0] === 't');
         const movies = [];
-        if (myList.length == 0) { res.render('favourite', { movies: null, pageTitle: 'Watchlist' }); }
+        if (myList.length === 0) { res.render('favourite', { movies: null, pageTitle: 'Watchlist' }); }
         myList.forEach((mId, i) => {
             Movie.findOne({ imdbId: mId }, (err, movie) => {
                 movies.push(movie);
-                if (i == myList.length - 1) {
+                if (i === myList.length - 1) {
                     res.render('favourite', { movies, pageTitle: 'Watchlist' });
                 }
             });
@@ -451,10 +459,10 @@ router.post('/watchlist', middleware.isLoggedIn, (req, res) => {
             console.log(err);
             return res.redirect('/');
         }
-        const newMovie = user.watchList.every((movieId) => movieId != imdbId);
+        const newMovie = user.watchList.every((movieId) => movieId !== imdbId);
         console.log(newMovie);
         if (newMovie) {
-            if (isNumber(imdbId)) {			// if the id is the tmdb id
+            if (isNumber(imdbId)) { // if the id is the tmdb id
                 getImdbWatchList(req, imdbId, title, img, release);
             } else {
                 getTmdbWatchList(req, imdbId);
@@ -467,8 +475,9 @@ router.post('/watchlist', middleware.isLoggedIn, (req, res) => {
         } else {
             console.log('Movie already Exist in watchlist');
         }
+        return true;
     });
-    res.redirect('back');
+    return res.redirect('back');
 });
 
 //  DELETE ROUTE FOR WATCHLIST
@@ -483,20 +492,22 @@ router.delete('/watchlist/:imdbId', middleware.isLoggedIn, (req, res) => {
             try {
                 const foundContent = await ExternalIds.findOne({ imdbId: req.params.imdbId });
                 tmdbid = foundContent.tmdbId;
-            } catch (err) {	}
+            } catch (err) {
+                // silent
+            }
             let i = -1; let
                 t = -1;
             user.watchList.forEach((id, index) => {
-                if (id == tmdbid) { t = index; }
-                if (id == imdbid) { i = index; }
+                if (id === tmdbid) { t = index; }
+                if (id === imdbid) { i = index; }
             });
 
-            if (i > t) {						// higher index movie id should be removed first
-                if (i != -1) user.watchList.splice(i, 1);
-                if (t != -1) user.watchList.splice(t, 1);
+            if (i > t) { // higher index movie id should be removed first
+                if (i !== -1) user.watchList.splice(i, 1);
+                if (t !== -1) user.watchList.splice(t, 1);
             } else {
-                if (t != -1) user.watchList.splice(t, 1);
-                if (i != -1) user.watchList.splice(i, 1);
+                if (t !== -1) user.watchList.splice(t, 1);
+                if (i !== -1) user.watchList.splice(i, 1);
             }
             console.log('Movie removed from watchlist');
             user.save();
@@ -505,17 +516,17 @@ router.delete('/watchlist/:imdbId', middleware.isLoggedIn, (req, res) => {
     });
 });
 
-grabRecommendationAndRender = function (res, id, img, torrents, title) {
+const grabRecommendationAndRender = (res, id, img, torrents, title) => {
     recommendations = [];
     const url = `https://api.themoviedb.org/3/movie/${id}/recommendations?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
     console.log(url);
     request(url, (error, response, body) => {
-        if (!error && response.statusCode == 200) {
+        if (!error && response.statusCode === 200) {
             const data = JSON.parse(body);
             if (data.results.length > 0) {
-                for (i = 0; i < 10 && i < data.results.length; i++) {
+                for (let i = 0; i < 10 && i < data.results.length; i++) {
                     recommendations.push(data.results[i]);
-                    if (i == 9) {
+                    if (i === 9) {
                         console.log(`Recommendation found${recommendations}`);
                         res.render('download', {
                             img, data: torrents, title, recommendations,
@@ -543,13 +554,15 @@ router.get('/download/:imdbId/', async (req, res) => {
         const foundContent = await ExternalIds.findOne({ imdbId: req.params.imdbId });
         tmdbId = foundContent.tmdbId;
         console.log('Found = ', foundContent);
-    } catch (err) {	}
+    } catch (err) {
+        // silent
+    }
 
     const url = `https://yts.mx/api/v2/list_movies.json?query_term=${req.params.imdbId}`;
     request(url, (error, response, body) => {
-        if (!error && response.statusCode == 200) {
+        if (!error && response.statusCode === 200) {
             let data = JSON.parse(body);
-            if (data.data.movie_count != 0) {
+            if (data.data.movie_count !== 0) {
                 data = data.data.movies[0];
                 const img = data.small_cover_image;
                 const { title } = data;
@@ -584,11 +597,11 @@ router.get('/download/:imdbId/', async (req, res) => {
 router.get('/watch/trailer/:imdbId/*', (req, res) => {
     let url = `https://yts.mx/api/v2/list_movies.json?query_term=${req.params.imdbId}`;
     request(url, (error, response, body) => {
-        if (!error && response.statusCode == 200) {
+        if (!error && response.statusCode === 200) {
             const data = JSON.parse(body);
             if (data.data.movie_count > 0) {
-                const { yt_trailer_code } = data.data.movies[0];
-                url = `https://www.youtube.com/embed/${yt_trailer_code}?el=0&wmode=transparent&border=0&autoplay=1`;
+                const { youTubeTrailerCode } = data.data.movies[0];
+                url = `https://www.youtube.com/embed/${youTubeTrailerCode}?el=0&wmode=transparent&border=0&autoplay=1`;
                 res.redirect(url);
             } else {
                 console.log('Trailer not found');

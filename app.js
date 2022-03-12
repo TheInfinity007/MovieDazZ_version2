@@ -1,55 +1,55 @@
 const express = require('express');
+
 const app = express();
-const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const methodOverride = require('method-override');
 
 const User = require('./models/user');
 
-//requiring routes
-var indexRoute = require('./routes/index');
-var movieRoute = require('./routes/movie');
-var celebrityRoute = require('./routes/celebrity');
+// requiring routes
+const indexRoute = require('./routes/index');
+const movieRoute = require('./routes/movie');
+const celebrityRoute = require('./routes/celebrity');
 
-var url = process.env.DATABASEURL || "mongodb://localhost/moviedazz";
+const url = process.env.DATABASEURL || 'mongodb://localhost/moviedazz';
 mongoose.set('useUnifiedTopology', true);
 mongoose.set('useCreateIndex', true);
-mongoose.connect(url, {useNewUrlParser: true, useFindAndModify:false});
+mongoose.connect(url, { useNewUrlParser: true, useFindAndModify: false });
 const db = mongoose.connection;
-db.on('error', error => console.log(error));
-db.once('open', () => console.log("Connected to Mongoose"));
-
+db.on('error', (error) => console.log(error));
+db.once('open', () => console.log('Connected to Mongoose'));
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
-app.use(bodyParser.urlencoded({extended:true}));
-app.use(methodOverride("_method"));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
 
-/*PASSPORT CONFIGURATION*/
+/* PASSPORT CONFIGURATION */
 app.use(require('express-session')({
-	secret: "Once again rusty wins cutest dog!",
-	resave: false,
-	saveUninitialized: false
+    secret: 'Once again rusty wins cutest dog!',
+    resave: false,
+    saveUninitialized: false,
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app.use((req, res, next)=>{
-	res.locals.currentUser = req.user;
-	next();
+app.use((req, res, next) => {
+    res.locals.currentUser = req.user;
+    next();
 });
 
-app.use("/movie", movieRoute);
+app.use('/movie', movieRoute);
 app.use('/celebrity', celebrityRoute);
 app.use('/', indexRoute);
 
-app.listen(process.env.PORT || 5000, ()=>{
-	console.log('MovieDazZ Has Started');
-	console.log('Server is listening at localhost:5000');
+app.listen(process.env.PORT || 5000, () => {
+    console.log('MovieDazZ Has Started');
+    console.log('Server is listening at localhost:5000');
 });
-

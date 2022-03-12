@@ -5,6 +5,6 @@
     },
     "rules": {
         "indent": ["error", 4],
-        "max-len":"off"
+        "max-len": "off"
     }
 }

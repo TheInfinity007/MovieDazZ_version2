@@ -2,4 +2,3 @@ node_modules
 package-lock.json
 public/res/library/owl
 public/.DS_Store
-.env

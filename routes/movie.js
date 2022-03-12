@@ -7,13 +7,37 @@ const ExternalIds = require('../models/externalId');
 let start;
 let recommendations = [];
 
-getImdbId = function (res, mId) {
+const grabMovieData = (res, imdbId) => {
+    if (imdbId == null) {
+        console.log('IMDB ID IS NOT DEFINED FOR THIS MOVIE');
+        return res.redirect('/');
+    }
+    const url = `http://www.omdbapi.com/?i=${imdbId}&plot=full&apikey=thewdb`;
+    console.log(url);
+    request(url, (error, response, body) => {
+        if (!error && response.statusCode === 200) {
+            const data = JSON.parse(body);
+            if (data.Response.toLowerCase() === 'true') {
+                console.log(new Date().getTime() - start);
+                return res.render('show', { data, recommendations });
+            }
+            console.log('Data Not Found Exit 2');
+            return res.redirect('back');
+        }
+        if (error)console.log('Error = ', error);
+        if (response) { console.log('Status Code = ', response.statusCode); }
+        console.log('ERROR OCCURED IN FETCHING THE DATA');
+        return res.redirect('back');
+    });
+};
+
+const getImdbId = (res, mId) => {
     const url = `https://api.themoviedb.org/3/movie/${mId}/external_ids?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
     let validId = false;
     let imdbId;
     console.log(url);
     request(url, (error, response, body) => {
-        if (!error && response.statusCode == 200) {
+        if (!error && response.statusCode === 200) {
             const data = JSON.parse(body);
             imdbId = data.imdb_id;
             validId = true;
@@ -34,36 +58,10 @@ getImdbId = function (res, mId) {
     });
 };
 
-grabMovieData = function (res, imdbId) {
-    if (imdbId == null) {
-        console.log('IMDB ID IS NOT DEFINED FOR THIS MOVIE');
-        return res.redirect('/');
-    }
-    url = `http://www.omdbapi.com/?i=${imdbId}&plot=full&apikey=thewdb`;
-    console.log(url);
-    request(url, (error, response, body) => {
-        if (!error && response.statusCode == 200) {
-            const data = JSON.parse(body);
-            if (data.Response == 'True') {
-                console.log(new Date().getTime() - start);
-                res.render('show', { data, recommendations });
-            } else {
-                console.log('Data Not Found Exit 2');
-                res.redirect('back');
-            }
-        } else {
-            if (error)console.log('Error = ', error);
-            if (response) { console.log('Status Code = ', response.statusCode); }
-            console.log('ERROR OCCURED IN FETCHING THE DATA');
-            res.redirect('back');
-        }
-    });
-};
-
 // FOR MOVIE CATEGORY
-getMovies = function (res, url, pageTitle, pageUrl, pageNo) {
+const getMovies = (res, url, pageTitle, pageUrl, pageNo) => {
     request(url, (error, response, body) => {
-        if (!error && response.statusCode == 200) {
+        if (!error && response.statusCode === 200) {
             const data = JSON.parse(body);
             const movies = [];
             data.results.forEach((result) => {
@@ -98,9 +96,9 @@ router.get('/in-theatre/*', (req, res) => {
     start = new Date().getTime();
     let pageNo = 1;
     if (req.query.page) {
-        pageNo = parseInt(req.query.page);
+        pageNo = parseInt(req.query.page, 10);
     }
-    url = `https://api.themoviedb.org/3/movie/now_playing?page=${pageNo}&api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
+    const url = `https://api.themoviedb.org/3/movie/now_playing?page=${pageNo}&api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
     const pageTitle = 'In Theatre';
     const pageUrl = 'in-theatre';
     getMovies(res, url, pageTitle, pageUrl, pageNo);
@@ -110,7 +108,7 @@ router.get('/evergreen/*', (req, res) => {
     start = new Date().getTime();
     let pageNo = 1;
     if (req.query.page) {
-        pageNo = parseInt(req.query.page);
+        pageNo = parseInt(req.query.page, 10);
     }
     const url = `https://api.themoviedb.org/3/movie/top_rated?page=${pageNo}&api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
     const pageTitle = 'Evergreen';
@@ -122,7 +120,7 @@ router.get('/upcoming/*', (req, res) => {
     start = new Date().getTime();
     let pageNo = 1;
     if (req.query.page) {
-        pageNo = parseInt(req.query.page);
+        pageNo = parseInt(req.query.page, 10);
     }
     const url = `https://api.themoviedb.org/3/movie/upcoming?page=${pageNo}&api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
     const pageTitle = 'Upcoming';
@@ -134,7 +132,7 @@ router.get('/trending/*', (req, res) => {
     start = new Date().getTime();
     let pageNo = 1;
     if (req.query.page) {
-        pageNo = parseInt(req.query.page);
+        pageNo = parseInt(req.query.page, 10);
     }
     const url = `https://api.themoviedb.org/3/trending/movie/day?page=${pageNo}&api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
     const pageTitle = 'Trending';
@@ -142,33 +140,35 @@ router.get('/trending/*', (req, res) => {
     getMovies(res, url, pageTitle, pageUrl, pageNo);
 });
 
-// FOR SEARCH PAGE
-router.get('/i/:imdb_id/*', async (req, res) => {
-    try {
-        const foundContent = await ExternalIds.findOne({ imdbId: req.params.imdb_id });
-        tmdbId = foundContent.tmdbId;
-        console.log('Found = ', foundContent);
-        if (tmdbId) {
-            console.log('Finding the recommendations');
-            grabRecommendation(tmdbId);
-        }
-    } catch (err) {	}
-    grabMovieData(res, req.params.imdb_id);
-});
-
-grabRecommendation = function (id) {
+const grabRecommendation = (id) => {
     recommendations = [];
     const url = `https://api.themoviedb.org/3/movie/${id}/recommendations?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
     console.log(url);
     request(url, (error, response, body) => {
-        if (!error && response.statusCode == 200) {
+        if (!error && response.statusCode === 200) {
             const data = JSON.parse(body);
-            for (i = 0; i < 10 && i < data.results.length; i++) {
+            for (let i = 0; i < 10 && i < data.results.length; i++) {
                 recommendations.push(data.results[i]);
             }
         }
     });
 };
+
+// FOR SEARCH PAGE
+router.get('/i/:imdb_id/*', async (req, res) => {
+    try {
+        const foundContent = await ExternalIds.findOne({ imdbId: req.params.imdb_id });
+        const { tmdbId } = foundContent;
+        console.log('Found = ', foundContent);
+        if (tmdbId) {
+            console.log('Finding the recommendations');
+            grabRecommendation(tmdbId);
+        }
+    } catch (err) {
+        // silent
+    }
+    grabMovieData(res, req.params.imdb_id);
+});
 
 // TO GET THE DETAILS ABOUT A MOVIE FROM HOME PAGE MOVIES CATEGORIES PAGE
 router.get('/:movie_id/*', async (req, res) => {
@@ -182,12 +182,14 @@ router.get('/:movie_id/*', async (req, res) => {
         const foundContent = await ExternalIds.findOne({ tmdbId: movieId }, { imdbId: 1 });
         imdbId = foundContent.imdbId;
         console.log('Found = ', foundContent);
-    } catch (err) {	}
+    } catch (err) {
+        // silent
+    }
     console.log(`IMDBID = ${imdbId}`);
     if (imdbId === undefined) {
         getImdbId(res, movieId);
     } else {
-	 	 grabMovieData(res, imdbId);
+        grabMovieData(res, imdbId);
     }
     console.log(movieId);
 });
@@ -196,7 +198,7 @@ router.get('/*', (req, res) => {
     start = new Date().getTime();
     let pageNo = 1;
     if (req.query.page) {
-        pageNo = parseInt(req.query.page);
+        pageNo = parseInt(req.query.page, 10);
     }
     const url = `https://api.themoviedb.org/3/movie/popular?page=${pageNo}&api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
     const pageTitle = 'Popular';

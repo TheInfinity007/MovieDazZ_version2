@@ -1,0 +1,10 @@
+{
+    "extends": ["airbnb-base"],
+    "parserOptions": {
+        "ecmaVersion": 2022
+    },
+    "rules": {
+        "indent": ["error", 4],
+        "max-len": "off"
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "files.autoSave": "afterDelay",
+    "prettier.tabWidth": 4,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+
+    // tell the ESLint plugin to run on save
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    }
+}

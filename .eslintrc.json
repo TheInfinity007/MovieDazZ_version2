@@ -3,5 +3,8 @@
     "parserOptions": {
         "ecmaVersion": 2022
     },
-    "rules": {}
+    "rules": {
+        "indent": ["error", 4],
+        "max-len":"off"
+    }
 }

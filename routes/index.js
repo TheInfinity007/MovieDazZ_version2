@@ -8,6 +8,7 @@ const middleware = require('../middleware');
 const Movie = require('../models/movie');
 const ExternalIds = require('../models/externalId');
 const Config = require('../lib/config');
+const { OMDB_BASE_URI, TMDB_BASE_URI } = require('../lib/constants');
 
 let start;
 let trendingMovies = [];
@@ -31,7 +32,7 @@ const checkMovies = (res) => {
 
 const grabTrendingMovies = (res) => {
     if (trendingMovies.length < 1) {
-        const url = `https://api.themoviedb.org/3/trending/movie/day?api_key=${Config.movieApiKey}`;
+        const url = `${TMDB_BASE_URI}/3/trending/movie/day?api_key=${Config.movieApiKey}`;
         request(url, (error, response, body) => {
             if (!error && response.statusCode === 200) {
                 const data = JSON.parse(body);
@@ -57,7 +58,7 @@ const grabTrendingMovies = (res) => {
 
 const grabTheatreMovies = (res) => {
     if (theatreMovies.length < 1) {
-        const url = `https://api.themoviedb.org/3/movie/now_playing?api_key=${Config.movieApiKey}`;
+        const url = `${TMDB_BASE_URI}/3/movie/now_playing?api_key=${Config.movieApiKey}`;
         request(url, (error, response, body) => {
             if (!error && response.statusCode === 200) {
                 const data = JSON.parse(body);
@@ -83,7 +84,7 @@ const grabTheatreMovies = (res) => {
 
 const grabUpcomingMovies = (res) => {
     if (upcomingMovies.length < 1) {
-        const url = `https://api.themoviedb.org/3/movie/upcoming?api_key=${Config.movieApiKey}`;
+        const url = `${TMDB_BASE_URI}/3/movie/upcoming?api_key=${Config.movieApiKey}`;
         request(url, (error, response, body) => {
             if (!error && response.statusCode === 200) {
                 const data = JSON.parse(body);
@@ -109,7 +110,7 @@ const grabUpcomingMovies = (res) => {
 
 const grabPopularMovies = (res) => {
     if (popularMovies.length < 1) {
-        const url = `https://api.themoviedb.org/3/movie/popular?api_key=${Config.movieApiKey}`;
+        const url = `${TMDB_BASE_URI}/3/movie/popular?api_key=${Config.movieApiKey}`;
         request(url, (error, response, body) => {
             if (!error && response.statusCode === 200) {
                 const data = JSON.parse(body);
@@ -135,7 +136,11 @@ const grabPopularMovies = (res) => {
 
 router.get('/search/:type/:title/:pageNo/*', (req, res) => {
     let url;
-    if (req.query.year) { url = `http://www.omdbapi.com/?s=${req.params.title}&page=${req.params.pageNo}&type=movie&y=${req.query.year}&apikey=${Config.searchApiKey}`; } else { url = `http://www.omdbapi.com/?s=${req.params.title}&page=${req.params.pageNo}&type=movie&apikey=${Config.searchApiKey}`; }
+    if (req.query.year) {
+        url = `${OMDB_BASE_URI}/?s=${req.params.title}&page=${req.params.pageNo}&type=movie&y=${req.query.year}&apikey=${Config.searchApiKey}`;
+    } else {
+        url = `${OMDB_BASE_URI}/?s=${req.params.title}&page=${req.params.pageNo}&type=movie&apikey=${Config.searchApiKey}`;
+    }
     console.log(url);
     request(url, (error, response, body) => {
         if (!error && response.statusCode === 200) {
@@ -243,7 +248,7 @@ const addToFavouriteMovie = (id, title, img, rel) => {
 };
 
 const getImdb = (req, id, title, img, rel) => {
-    const url = `https://api.themoviedb.org/3/movie/${id}/external_ids?api_key=${Config.movieApiKey}`;
+    const url = `${TMDB_BASE_URI}/3/movie/${id}/external_ids?api_key=${Config.movieApiKey}`;
     request(url, (error, response, body) => {
         if (!error && response.statusCode === 200) {
             const data = JSON.parse(body);
@@ -265,7 +270,7 @@ const getImdb = (req, id, title, img, rel) => {
 };
 
 const getTmdb = (req, id) => {
-    const url = `https://api.themoviedb.org/3/find/${id}?api_key=${Config.movieApiKey}&external_source=imdb_id`;
+    const url = `${TMDB_BASE_URI}/3/find/${id}?api_key=${Config.movieApiKey}&external_source=imdb_id`;
     console.log(url);
     request(url, (error, response, body) => {
         if (!error && response.statusCode === 200) {
@@ -294,7 +299,7 @@ router.get('/favourite/*', middleware.isLoggedIn, (req, res) => {
         const movies = [];
         if (myFav.length === 0) { res.render('favourite', { movies: null, pageTitle: 'Favourites' }); }
         myFav.forEach((mId, i) => {
-            Movie.findOne({ imdbId: mId }, (err, movie) => {
+            Movie.findOne({ imdbId: mId }, (_err, movie) => {
                 movies.push(movie);
                 if (i === myFav.length - 1) {
                     res.render('favourite', { movies, pageTitle: 'Favourites' });
@@ -352,7 +357,7 @@ router.delete('/favourite/:imdbId', middleware.isLoggedIn, (req, res) => {
                     tmdbid = id;
                     const foundContent = await ExternalIds.findOne({ tmdbId: id });
                     imdbid = foundContent.imdbId;
-                } catch (err) {
+                } catch (_err) {
                     // silent
                 }
             } else { // if id is imdb id
@@ -360,7 +365,7 @@ router.delete('/favourite/:imdbId', middleware.isLoggedIn, (req, res) => {
                     imdbid = id;
                     const foundContent = await ExternalIds.findOne({ imdbId: id });
                     tmdbid = foundContent.tmdbId;
-                } catch (err) {
+                } catch (_err) {
                     // silent
                 }
             }
@@ -386,7 +391,7 @@ router.delete('/favourite/:imdbId', middleware.isLoggedIn, (req, res) => {
 });
 
 const getImdbWatchList = (req, id, title, img, rel) => {
-    const url = `https://api.themoviedb.org/3/movie/${id}/external_ids?api_key=${Config.movieApiKey}`;
+    const url = `${TMDB_BASE_URI}/3/movie/${id}/external_ids?api_key=${Config.movieApiKey}`;
     request(url, (error, response, body) => {
         if (!error && response.statusCode === 200) {
             const data = JSON.parse(body);
@@ -405,7 +410,7 @@ const getImdbWatchList = (req, id, title, img, rel) => {
 };
 
 const getTmdbWatchList = (req, id) => {
-    const url = `https://api.themoviedb.org/3/find/${id}?api_key=${Config.movieApiKey}&external_source=imdb_id`;
+    const url = `${TMDB_BASE_URI}/3/find/${id}?api_key=${Config.movieApiKey}&external_source=imdb_id`;
     console.log(url);
     request(url, (error, response, body) => {
         if (!error && response.statusCode === 200) {
@@ -437,7 +442,7 @@ router.get('/watchlist/*', middleware.isLoggedIn, (req, res) => {
         const movies = [];
         if (myList.length === 0) { res.render('favourite', { movies: null, pageTitle: 'Watchlist' }); }
         myList.forEach((mId, i) => {
-            Movie.findOne({ imdbId: mId }, (err, movie) => {
+            Movie.findOne({ imdbId: mId }, (_err, movie) => {
                 movies.push(movie);
                 if (i === myList.length - 1) {
                     res.render('favourite', { movies, pageTitle: 'Watchlist' });
@@ -493,7 +498,7 @@ router.delete('/watchlist/:imdbId', middleware.isLoggedIn, (req, res) => {
             try {
                 const foundContent = await ExternalIds.findOne({ imdbId: req.params.imdbId });
                 tmdbid = foundContent.tmdbId;
-            } catch (err) {
+            } catch (_err) {
                 // silent
             }
             let i = -1; let
@@ -519,7 +524,7 @@ router.delete('/watchlist/:imdbId', middleware.isLoggedIn, (req, res) => {
 
 const grabRecommendationAndRender = (res, id, img, torrents, title) => {
     recommendations = [];
-    const url = `https://api.themoviedb.org/3/movie/${id}/recommendations?api_key=${Config.movieApiKey}`;
+    const url = `${TMDB_BASE_URI}/3/movie/${id}/recommendations?api_key=${Config.movieApiKey}`;
     console.log(url);
     request(url, (error, response, body) => {
         if (!error && response.statusCode === 200) {

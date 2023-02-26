@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const request = require('request');
 const ExternalIds = require('../models/externalId');
+const Config = require('../lib/config');
 
 let start;
 let recommendations = [];
@@ -12,7 +13,7 @@ const grabMovieData = (res, imdbId) => {
         console.log('IMDB ID IS NOT DEFINED FOR THIS MOVIE');
         return res.redirect('/');
     }
-    const url = `http://www.omdbapi.com/?i=${imdbId}&plot=full&apikey=thewdb`;
+    const url = `http://www.omdbapi.com/?i=${imdbId}&plot=full&apikey=${Config.searchApiKey}`;
     console.log(url);
     request(url, (error, response, body) => {
         if (!error && response.statusCode === 200) {
@@ -32,7 +33,7 @@ const grabMovieData = (res, imdbId) => {
 };
 
 const getImdbId = (res, mId) => {
-    const url = `https://api.themoviedb.org/3/movie/${mId}/external_ids?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
+    const url = `https://api.themoviedb.org/3/movie/${mId}/external_ids?api_key=${Config.movieApiKey}`;
     let validId = false;
     let imdbId;
     console.log(url);
@@ -98,7 +99,7 @@ router.get('/in-theatre/*', (req, res) => {
     if (req.query.page) {
         pageNo = parseInt(req.query.page, 10);
     }
-    const url = `https://api.themoviedb.org/3/movie/now_playing?page=${pageNo}&api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
+    const url = `https://api.themoviedb.org/3/movie/now_playing?page=${pageNo}&api_key=${Config.movieApiKey}`;
     const pageTitle = 'In Theatre';
     const pageUrl = 'in-theatre';
     getMovies(res, url, pageTitle, pageUrl, pageNo);
@@ -110,7 +111,7 @@ router.get('/evergreen/*', (req, res) => {
     if (req.query.page) {
         pageNo = parseInt(req.query.page, 10);
     }
-    const url = `https://api.themoviedb.org/3/movie/top_rated?page=${pageNo}&api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
+    const url = `https://api.themoviedb.org/3/movie/top_rated?page=${pageNo}&api_key=${Config.movieApiKey}`;
     const pageTitle = 'Evergreen';
     const pageUrl = 'evergreen';
     getMovies(res, url, pageTitle, pageUrl, pageNo);
@@ -122,7 +123,7 @@ router.get('/upcoming/*', (req, res) => {
     if (req.query.page) {
         pageNo = parseInt(req.query.page, 10);
     }
-    const url = `https://api.themoviedb.org/3/movie/upcoming?page=${pageNo}&api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
+    const url = `https://api.themoviedb.org/3/movie/upcoming?page=${pageNo}&api_key=${Config.movieApiKey}`;
     const pageTitle = 'Upcoming';
     const pageUrl = 'upcoming';
     getMovies(res, url, pageTitle, pageUrl, pageNo);
@@ -134,7 +135,7 @@ router.get('/trending/*', (req, res) => {
     if (req.query.page) {
         pageNo = parseInt(req.query.page, 10);
     }
-    const url = `https://api.themoviedb.org/3/trending/movie/day?page=${pageNo}&api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
+    const url = `https://api.themoviedb.org/3/trending/movie/day?page=${pageNo}&api_key=${Config.movieApiKey}`;
     const pageTitle = 'Trending';
     const pageUrl = 'trending';
     getMovies(res, url, pageTitle, pageUrl, pageNo);
@@ -142,7 +143,7 @@ router.get('/trending/*', (req, res) => {
 
 const grabRecommendation = (id) => {
     recommendations = [];
-    const url = `https://api.themoviedb.org/3/movie/${id}/recommendations?api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
+    const url = `https://api.themoviedb.org/3/movie/${id}/recommendations?api_key=${Config.movieApiKey}`;
     console.log(url);
     request(url, (error, response, body) => {
         if (!error && response.statusCode === 200) {
@@ -200,7 +201,7 @@ router.get('/*', (req, res) => {
     if (req.query.page) {
         pageNo = parseInt(req.query.page, 10);
     }
-    const url = `https://api.themoviedb.org/3/movie/popular?page=${pageNo}&api_key=1b58a6bfefb9d8ebd9a671fc53e4e9c9`;
+    const url = `https://api.themoviedb.org/3/movie/popular?page=${pageNo}&api_key=${Config.movieApiKey}`;
     const pageTitle = 'Popular';
     const pageUrl = '';
     getMovies(res, url, pageTitle, pageUrl, pageNo);

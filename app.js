@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 
 const app = express();
@@ -49,7 +51,7 @@ app.use('/movie', movieRoute);
 app.use('/celebrity', celebrityRoute);
 app.use('/', indexRoute);
 
-app.listen(process.env.PORT || 5000, () => {
+app.listen(process.env.PORT || 5001, () => {
     console.log('MovieDazZ Has Started');
-    console.log('Server is listening at localhost:5000');
+    console.log(`Server is listening at localhost:${process.env.PORT || 5001}`);
 });
